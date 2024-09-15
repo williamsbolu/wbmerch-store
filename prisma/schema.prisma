@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type ProductSizes {
+  xxxl Int @default(0)
+  xxl  Int @default(2)
+  xl   Int @default(3)
+  l    Int @default(2)
+  m    Int @default(3)
+  s    Int @default(4)
+}
+
+model products {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String        @unique
+  category    Category      @default(shirt)
+  gender      Gender        @default(male)
+  collections Collection    @default(unisex)
+  coverImage  String
+  images      String[]
+  description String?
+  price       Int
+  sizes       ProductSizes?
+  stock       Int
+  slug        String        @unique
+  createdAt   DateTime      @default(now())
+  v           Int           @map("__v") @ignore
+  CartItem    CartItem[]
+}
+
+enum Category {
+  shirt
+  t_shirt
+  hoodies
+  joggers
+  underwear
+  jackets
+  sweat_shirts
+  polo_shirts
+  shorts
+  pants
+  bags
+  phone_cases
+  caps
+  hats
+}
+
+enum Gender {
+  male
+  female
+}
+
+enum Collection {
+  men
+  women
+  unisex
+  kids
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  GUEST
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  phone         String?
+  password      String?
+  role          UserRole  @default(USER)
+  accounts      Account[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Cart      Cart[]
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+// cart models
+enum Size {
+  s
+  m
+  l
+  xl
+  xxl
+  xxxl
+}
+
+model Cart {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId String?
+  userId    String?    @db.ObjectId
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model CartItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  cartId    String   @db.ObjectId
+  productId String   @db.ObjectId
+  size      Size
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cart    Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product products @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, productId, size])
+}
