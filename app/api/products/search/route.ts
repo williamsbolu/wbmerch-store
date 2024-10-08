@@ -39,7 +39,7 @@ export async function GET(request: Request) {
           },
         },
         {
-          collections: {
+          collection: {
             in: Object.values(Collection).filter((col) =>
               col.toLowerCase().includes(term)
             ),

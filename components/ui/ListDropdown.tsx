@@ -11,34 +11,31 @@ type DropdownProps = {
 
 type ListDropdownProps = {
   text: string;
-  path: string;
   dropDown: DropdownProps[];
 };
 
-export default function ListDropdown({
-  text,
-  path,
-  dropDown,
-}: ListDropdownProps) {
+export default function ListDropdown({ text, dropDown }: ListDropdownProps) {
   const [dropdownEnabled, setDropdownEnabled] = useState<boolean>(false);
 
   return (
     <li className="">
-      <span className="flex items-center justify-between border-b border-primary border-solid py-3 px-[10px]">
-        <Link href={path} className="basis-9/12">
-          {text}
-        </Link>
-        <button onClick={() => setDropdownEnabled((prev) => !prev)}>
+      <div
+        className="flex items-center justify-between border-b border-primary border-solid py-3 px-[10px]"
+        role="button"
+        onClick={() => setDropdownEnabled((prev) => !prev)}
+      >
+        <span className="basis-9/12 tracking-wider">{text}</span>
+        <button>
           <MdKeyboardArrowDown
             className={`w-[22px] h-[22px] text-primary transition-all duration-300 ${
               dropdownEnabled && "rotate-180"
             }`}
           />
         </button>
-      </span>
+      </div>
 
       {dropdownEnabled && (
-        <ul className="px-[10px] mt-3">
+        <ul className="px-[10px] mt-[10px]">
           {dropDown.map((link) => (
             <li
               key={link.path}

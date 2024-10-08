@@ -2,17 +2,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useCallback, useState } from "react";
 import FancyBox from "@/lib/FancyBoy";
-import { IoIosArrowForward } from "react-icons/io";
-import { IoIosArrowBack } from "react-icons/io";
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/autoplay";
+import "swiper/css/effect-fade";
 
 // import required modules
-import { Pagination } from "swiper/modules";
+import { Autoplay, EffectFade, Pagination } from "swiper/modules";
 
 export default function ProductImageSlider({
   coverImage,
@@ -34,12 +33,17 @@ export default function ProductImageSlider({
     >
       <div>
         <Swiper
+          modules={[Pagination, Autoplay, EffectFade]}
           pagination={{
             dynamicBullets: true,
             clickable: true,
           }}
+          autoplay={{
+            delay: 13000,
+            disableOnInteraction: false,
+          }}
+          effect="fade"
           spaceBetween={10}
-          modules={[Pagination]}
           className="mySwiper"
         >
           <SwiperSlide>

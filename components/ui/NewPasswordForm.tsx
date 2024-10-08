@@ -56,7 +56,7 @@ export default function NewPasswordForm() {
         Enter a new password
       </h1>
 
-      <div className="mx-auto grid gap-4 md:max-w-[400px]">
+      <div className="mx-auto grid gap-4 max-w-[400px]">
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-1">
             <label htmlFor="" className=" text-sm tracking-wide">

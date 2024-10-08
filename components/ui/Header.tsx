@@ -21,6 +21,9 @@ import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { getOrCreateCart } from "@/actions/cart";
 import { useDispatch, useSelector } from "react-redux";
 import { getTotalCartQuantity, replaceCart } from "../cart/cartSlice";
+import { getUserWishlist } from "@/actions/wishlist";
+import { setWishlist } from "../wishlist/wishlistSlice";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [isSticky, setIsSticky] = useState(true);
@@ -28,6 +31,7 @@ export default function Header() {
   const user = useCurrentUser();
   const totalCartQuantity = useSelector(getTotalCartQuantity);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,10 +54,9 @@ export default function Header() {
   }, [lastScrollY]);
 
   useEffect(() => {
-    console.log;
     let sessionId = cookies.get("sessionId");
 
-    getOrCreateCart(user?.id, sessionId)
+    getOrCreateCart({ userId: user?.id, sessionId })
       .then((data) => {
         if (user?.id) {
           if (sessionId) {
@@ -69,6 +72,18 @@ export default function Header() {
       .catch(() => {
         return;
       });
+  }, [user, dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      getUserWishlist()
+        .then((data) => {
+          dispatch(setWishlist(data));
+        })
+        .catch((err) => {
+          console.error("Failed to get wishlist");
+        });
+    }
   }, [user, dispatch]);
 
   return (
@@ -107,10 +122,13 @@ export default function Header() {
         </Link>
 
         <nav className="flex items-center gap-6">
-          <button>
+          <button
+            className="hidden md:block"
+            onClick={() => router.push("/account/wishlist")}
+          >
             <CiHeart className="h-[26px] w-[26px] text-primary" />
           </button>
-          <li className="group relative list-none flex">
+          <li className="hidden group relative list-none md:flex">
             <button className="">
               <CiUser className="h-[26px] w-[26px] text-primary" />
             </button>
@@ -183,7 +201,7 @@ export default function Header() {
                   </li>
                   <li>
                     <Link
-                      href="/account/favorite"
+                      href="/account/wishlist"
                       className={`group/link flex items-center py-3 gap-4 hover:bg-primary hover:text-white pl-5`}
                     >
                       <PiHeart className="h-5 w-5 text-primary group-hover/link:text-white" />
@@ -206,7 +224,7 @@ export default function Header() {
 
           <Link href="/cart" className="relative">
             <PiHandbagLight className="h-7 w-7" />
-            <span className="bg-primary absolute w-5 h-5 text-white text-xs rounded-full -bottom-1 -right-1 flex items-center justify-center">
+            <span className="bg-red-500 absolute w-5 h-5 text-white text-xs rounded-full -bottom-1 -right-1 flex items-center justify-center">
               {totalCartQuantity}
             </span>
           </Link>

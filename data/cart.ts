@@ -4,7 +4,7 @@ import { Size } from "@prisma/client";
 export async function addToCart(
   userId: string | undefined,
   productId: string,
-  size: Size,
+  size: Size | null,
   quantity: number
 ) {
   const cart = await db.cart.findFirst({

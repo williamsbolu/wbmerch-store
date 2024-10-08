@@ -8,6 +8,7 @@ export const publicRoutes = [
   "/auth/new-verification",
   "/products/:slug",
   "/cart",
+  "/checkout",
   "/collections/:category",
 ];
 

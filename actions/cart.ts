@@ -6,10 +6,13 @@ import { db } from "@/lib/db";
 import { Size } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 
-export async function getOrCreateCart(
-  userId: string | null = null,
-  sessionId: string | undefined
-) {
+export async function getOrCreateCart({
+  userId,
+  sessionId,
+}: {
+  userId?: string | undefined;
+  sessionId?: string | undefined;
+}) {
   if (userId) {
     // For authenticated users
     let cart = await db.cart.findFirst({
@@ -29,6 +32,8 @@ export async function getOrCreateCart(
                 name: true,
                 coverImage: true,
                 price: true,
+                sizes: true,
+                stock: true,
                 slug: true,
               },
             },
@@ -54,6 +59,8 @@ export async function getOrCreateCart(
                   name: true,
                   coverImage: true,
                   price: true,
+                  sizes: true,
+                  stock: true,
                   slug: true,
                 },
               },
@@ -74,7 +81,12 @@ export async function getOrCreateCart(
       if (sessionCart) {
         if (sessionCart.items.length > 0) {
           for (const item of sessionCart.items) {
-            await addToCart(userId, item.productId, item.size, item.quantity);
+            await addToCart(
+              userId,
+              item.productId,
+              item?.size || null, // null is required because of camparison
+              item.quantity
+            );
           }
         }
 
@@ -109,6 +121,8 @@ export async function getOrCreateCart(
                 name: true,
                 coverImage: true,
                 price: true,
+                sizes: true,
+                stock: true,
                 slug: true,
               },
             },
@@ -133,6 +147,8 @@ export async function getOrCreateCart(
                   name: true,
                   coverImage: true,
                   price: true,
+                  sizes: true,
+                  stock: true,
                   slug: true,
                 },
               },
@@ -150,7 +166,7 @@ interface addToCartProps {
   sessionId: string | undefined;
   productId: string;
   quantity: number;
-  size: string;
+  size: string | null;
 }
 
 export async function addOrUpdateCart({
@@ -161,14 +177,22 @@ export async function addOrUpdateCart({
 }: addToCartProps) {
   const user = await currentUser();
 
-  const { cartItems, cart } = await getOrCreateCart(user?.id, sessionId);
+  const { cartItems, cart } = await getOrCreateCart({
+    userId: user?.id,
+    sessionId,
+  });
 
   const existingCart = cartItems.find(
     (item) => item.productId === productId && item.size === size
   );
 
-  // Ensure that the size is converted to the enum
-  const enumSize = size.toLowerCase() as Size; // Convert the string to lower case and cast it to 'Size'
+  // Ensure that the size is converted to the enum, if there is no size we set it to undefined to remove if from being pushed to the database
+  let enumSize;
+  if (size) {
+    enumSize = size.toLowerCase() as Size; // Convert the string to lower case and cast it to 'Size'
+  } else {
+    enumSize = undefined;
+  }
 
   if (existingCart) {
     await db.cartItem.update({
@@ -200,7 +224,10 @@ export async function deleteCartQuantity(
 ) {
   const user = await currentUser();
 
-  const { cart, cartItems } = await getOrCreateCart(user?.id, sessionId);
+  const { cartItems } = await getOrCreateCart({
+    userId: user?.id,
+    sessionId,
+  });
 
   const existingCart = cartItems.find(
     (item) => item.productId === productId && item.size === size
@@ -218,11 +245,11 @@ export async function deleteCartQuantity(
 export async function deleteCartItem(
   sessionId: string | undefined,
   productId: string,
-  size: string
+  size: string // its can be also null
 ) {
   const user = await currentUser();
 
-  const { cartItems } = await getOrCreateCart(user?.id, sessionId);
+  const { cartItems } = await getOrCreateCart({ userId: user?.id, sessionId });
 
   const existingCart = cartItems.find(
     (item) => item.productId === productId && item.size === size

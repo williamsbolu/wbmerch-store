@@ -35,7 +35,7 @@ export default function Footer() {
         <form>
           <p className="text-[13px] text-[#121212BF] mb-2">Country/region</p>
 
-          <select className="text-primary border border-primary rounded-[5px] text-[13px] px-4 h-11 focus:outline-none">
+          <select className="bg-white text-primary border border-primary rounded-[5px] text-[13px] px-4 h-11 focus:outline-none">
             <option value="">Nigeria (NGN &#8358;)</option>
             <option value="">United Kindom (GBP &euro;)</option>
             <option value="">United States (USD &#36;)</option>

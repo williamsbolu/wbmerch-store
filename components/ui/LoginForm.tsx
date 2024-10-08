@@ -17,6 +17,7 @@ import { useSession } from "next-auth/react";
 export default function LoginForm() {
   const { update } = useSession();
   const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Email already in use with different provider!"
@@ -42,7 +43,7 @@ export default function LoginForm() {
     setSuccess("");
 
     startTransition(() => {
-      login(values)
+      login(values, callbackUrl)
         .then((data) => {
           if (data?.error) {
             setError(data.error);
@@ -59,10 +60,10 @@ export default function LoginForm() {
   }
 
   return (
-    <section className="my-12 px-5">
+    <section className="mt-12 mb-16 px-5">
       <h1 className="text-3xl text-center tracking-wide py-4">Login</h1>
 
-      <div className="mx-auto grid gap-4 md:max-w-[400px]">
+      <div className="mx-auto grid gap-4 max-w-[400px]">
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-1">
             <label htmlFor="" className=" text-sm tracking-wide">

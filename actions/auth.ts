@@ -20,8 +20,12 @@ import {
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/mail";
 import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 import { getVerificationTokenByToken } from "@/data/verification-token";
+import { getAccountById } from "@/data/account";
 
-export const login = async (values: z.infer<typeof LoginSchema>) => {
+export const login = async (
+  values: z.infer<typeof LoginSchema>,
+  callbackUrl?: string | null
+) => {
   // 1. Server side validation
   const validatedFields = LoginSchema.safeParse(values);
   if (!validatedFields.success) return { error: "Invalid fields!" };
@@ -53,7 +57,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
   } catch (err) {
     if (err instanceof AuthError) {
@@ -107,6 +111,14 @@ export const reset = async (values: z.infer<typeof ResetSchema>) => {
 
   const existingUser = await getUserByEmail(email);
   if (!existingUser) return { error: "Email not found!" };
+
+  // Check if the user is an Oauth user
+  const existingOAuthUser = await getAccountById(existingUser.id);
+  if (existingOAuthUser?.provider) {
+    return {
+      error: `Password reset not available for ${existingOAuthUser?.provider} users`,
+    };
+  }
 
   // Generate token and send email
   const passwordResetToken = await generatePasswordResetToken(email);

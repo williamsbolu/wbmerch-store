@@ -35,11 +35,12 @@ export default function Page() {
   }
 
   return (
-    <div className="py-6">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="max-w-[600px] mx-auto grid gap-y-5"
-      >
+    <div className="py-6 max-w-[600px] mx-auto grid gap-5">
+      <h1 className="text-lg tracking-wider text-center md:text-start">
+        Change Password
+      </h1>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="grid gap-y-5">
         <div className="space-y-1">
           <label htmlFor="" className="text-sm tracking-wide">
             Password

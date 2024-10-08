@@ -16,7 +16,7 @@ export default function SearchBarResultsItem({
 }) {
   return (
     <li className="group rounded-md px-4 hover:bg-[#1212120a] transition-all duration-200 sm:px-5">
-      <Link href={`/proucts/${slug}`} className="flex py-3 gap-4">
+      <Link href={`/products/${slug}`} className="flex py-3 gap-4">
         <Image
           src={coverImage}
           width={65}

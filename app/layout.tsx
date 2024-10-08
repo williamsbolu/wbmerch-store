@@ -1,5 +1,8 @@
 import { Toaster } from "react-hot-toast";
 
+import "@/app/_styles/globals.css";
+import { LoadingBar } from "@/hooks/LoadingBar";
+
 export default async function RootLayout({
   children,
 }: {
@@ -7,7 +10,15 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href="https://unpkg.com/nprogress@0.2.0/nprogress.css"
+        />
+      </head>
       <body>
+        <LoadingBar />
         {children}
 
         <Toaster

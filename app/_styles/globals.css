@@ -5,7 +5,21 @@
 @layer components {
 }
 
+::selection {
+  background-color: #4f46e5;
+  color: #fff;
+}
+
 .stop-scrolling {
   height: 100%;
   overflow: hidden;
+}
+
+#nprogress .bar {
+  background: #4f46e5 !important; /* Change this to your desired color */
+  height: 2px !important;
+}
+
+.admin::-webkit-scrollbar {
+  display: none;
 }

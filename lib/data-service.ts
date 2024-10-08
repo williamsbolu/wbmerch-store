@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { Prisma, Gender, Category, Collection } from "@prisma/client";
+import { notFound } from "next/navigation";
 
 export async function getRecentProducts() {
   try {
@@ -58,28 +59,28 @@ export async function getAllProducts({
 }
 
 export async function getProduct(slug: string) {
-  try {
-    const product = await db.products.findFirst({
-      where: {
-        slug: slug,
-      },
-      select: {
-        id: true,
-        name: true,
-        price: true,
-        coverImage: true,
-        images: true,
-        description: true,
-        sizes: true,
-        stock: true,
-        slug: true,
-      },
-    });
-    return product;
-  } catch (error) {
-    console.log(error);
-    throw new Error("Failed to get product");
+  const product = await db.products.findFirst({
+    where: {
+      slug: slug,
+    },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      coverImage: true,
+      images: true,
+      description: true,
+      sizes: true,
+      stock: true,
+      slug: true,
+    },
+  });
+
+  if (!product) {
+    notFound();
   }
+
+  return product;
 }
 
 export async function getSearchedProducts(queryObj: {
@@ -120,7 +121,7 @@ export async function getSearchedProducts(queryObj: {
           },
         },
         {
-          collections: {
+          collection: {
             in: Object.values(Collection).filter((col) =>
               col.toLowerCase().includes(term)
             ),

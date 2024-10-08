@@ -15,7 +15,7 @@ type ProductProps = {
 
 export default function Product({ product }: ProductProps) {
   return (
-    <li className="group grid gap-4">
+    <li className="relative group flex flex-col gap-4">
       <Link
         href={`/products/${product.slug}`}
         className="relative block aspect-square rounded-2xl overflow-hidden"
@@ -23,6 +23,7 @@ export default function Product({ product }: ProductProps) {
         <Image
           src={product.coverImage}
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover transition-all duration-700 group-hover:scale-105"
           alt={product.name}
         />

@@ -7,6 +7,7 @@ export interface cartItemObject {
   product: products;
   size: string;
   quantity: number;
+  productQuantityInStock: number;
 }
 
 interface CartState {
@@ -85,6 +86,14 @@ export const getTotalCartQuantity = (state: any) =>
     (sum: number, item: cartItemObject) => sum + item.quantity,
     0
   );
+
+export function getExistingCartItem(productId: string, size: string | null) {
+  return (state: any) =>
+    state.cart.items.find(
+      (item: cartItemObject) =>
+        item.productId === productId && item.size === size
+    );
+}
 
 // export const getTotalCartAmount = (state: any) =>
 //   state.cart.cart.reduce(

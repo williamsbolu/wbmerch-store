@@ -8,40 +8,42 @@ datasource db {
 }
 
 type ProductSizes {
-  xxxl Int @default(0)
-  xxl  Int @default(2)
-  xl   Int @default(3)
-  l    Int @default(2)
-  m    Int @default(3)
   s    Int @default(4)
+  m    Int @default(3)
+  l    Int @default(2)
+  xl   Int @default(3)
+  xxl  Int @default(2)
+  xxxl Int @default(0)
 }
 
 model products {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
   name        String        @unique
-  category    Category      @default(shirt)
-  gender      Gender        @default(male)
-  collections Collection    @default(unisex)
+  category    Category      @default(shirts)
+  gender      Gender?
+  collection  Collection?
   coverImage  String
   images      String[]
   description String?
   price       Int
   sizes       ProductSizes?
-  stock       Int
+  stock       Int?
+  totalStock  Int
   slug        String        @unique
   createdAt   DateTime      @default(now())
   v           Int           @map("__v") @ignore
   CartItem    CartItem[]
+  Wishlist    Wishlist[]
 }
 
 enum Category {
-  shirt
-  t_shirt
+  shirts
+  t_shirts
   hoodies
   joggers
-  underwear
+  underwears
   jackets
-  sweat_shirts
+  sweatshirts
   polo_shirts
   shorts
   pants
@@ -80,9 +82,11 @@ model User {
   role          UserRole  @default(USER)
   accounts      Account[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   Cart      Cart[]
+  Wishlist  Wishlist[]
+  Address   Address[]
 }
 
 model Account {
@@ -150,7 +154,7 @@ model CartItem {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   cartId    String   @db.ObjectId
   productId String   @db.ObjectId
-  size      Size
+  size      Size?
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -159,4 +163,32 @@ model CartItem {
   product products @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([cartId, productId, size])
+}
+
+model Wishlist {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  product   products @relation(fields: [productId], references: [id])
+  productId String   @db.ObjectId
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+model Address {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String  @db.ObjectId
+  isDefault  Boolean @default(false)
+  firstName  String
+  lastName   String
+  address    String
+  optional   String?
+  country    String
+  state      String
+  city       String
+  postalCode String
+  phone      String
+
+  user User @relation(fields: [userId], references: [id])
 }

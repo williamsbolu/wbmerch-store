@@ -49,12 +49,12 @@ export default function SignUpForm() {
   }
 
   return (
-    <section className="my-12 px-5">
+    <section className="mt-12 mb-16 px-5">
       <h1 className="text-3xl text-center tracking-wide py-4">
         Create Account
       </h1>
 
-      <div className="mx-auto grid gap-4 md:max-w-[400px]">
+      <div className="mx-auto grid gap-4 max-w-[400px]">
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-1">
             <label htmlFor="" className=" text-[15px] tracking-wide">

@@ -4,7 +4,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SlArrowRight } from "react-icons/sl";
 import { SlArrowLeft } from "react-icons/sl";
 
-export default function Pagination({ count }: { count: number }) {
+export default function Pagination({
+  count,
+  size,
+}: {
+  count: number;
+  size: number;
+}) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathName = usePathname();
@@ -14,7 +20,7 @@ export default function Pagination({ count }: { count: number }) {
     : Number(searchParams.get("page"));
 
   // Pagecount is the total number of pages that will be returned (replace 16 with original page size)
-  const pageCount = Math.ceil(count / 16);
+  const pageCount = Math.ceil(count / size);
 
   function nextPage() {
     // if we are on the last page

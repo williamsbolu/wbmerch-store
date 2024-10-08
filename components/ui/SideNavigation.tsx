@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { RxDashboard } from "react-icons/rx";
+// import { RxDashboard } from "react-icons/rx";
 import { PiUserList, PiLockKey, PiMapPin, PiHeart } from "react-icons/pi";
 import { SlBag } from "react-icons/sl";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
@@ -28,7 +28,7 @@ const navLinks = [
   },
   {
     name: "Wishlist",
-    href: "/account/favorite",
+    href: "/account/wishlist",
     icon: <PiHeart className="h-5 w-5 text-primary" />,
   },
 ];
@@ -38,14 +38,16 @@ export default function SideNavigation() {
   const pathName = usePathname();
 
   return (
-    <nav className="h-full border-r-[3px] border-[#12121218] pr-5">
-      {/* <h1 className="text-xl font-normal mb-5 tracking-wide">My Account</h1> */}
-      <ul className="flex flex-col gap-[2px] h-full text-[15px]">
+    <nav className="h-full border-[#12121218] md:pr-5 md:border-r-[3px]">
+      <h1 className="text-xl text-center mb-5 tracking-wide md:text-start">
+        My Account
+      </h1>
+      <ul className="grid gap-[2px] text-[15px]">
         {navLinks.map((link) => (
           <li key={link.name}>
             <Link
               href={link.href}
-              className={`flex items-center py-3 rounded-[5px] gap-3 hover:bg-[#1212120c] px-2 transition-all duration-150 hover:px-5 ${
+              className={`flex items-center justify-center py-3 rounded-[5px] gap-3 hover:bg-[#1212120c] px-2 transition-all duration-150 hover:px-5 md:justify-start ${
                 pathName === link.href && "px-5 bg-[#1212120c]"
               }`}
             >
@@ -58,7 +60,7 @@ export default function SideNavigation() {
           <li>
             <Link
               href="/account/password"
-              className={`flex items-center py-3 rounded-[5px] gap-3 hover:bg-[#1212120c] px-2 transition-all duration-150 hover:px-5 ${
+              className={`flex items-center justify-center py-3 rounded-[5px] gap-3 hover:bg-[#1212120c] px-2 transition-all duration-150 hover:px-5 md:justify-start ${
                 pathName === "/account/password" && "px-5 bg-[#1212120c]"
               }`}
             >
@@ -70,8 +72,8 @@ export default function SideNavigation() {
         {user?.role === "ADMIN" && (
           <li>
             <Link
-              href="/account"
-              className="flex items-center py-3 rounded-[5px] gap-3 hover:bg-[#1212120c] px-2 transition-all duration-150 hover:px-5"
+              href="/admin"
+              className="flex items-center justify-center py-3 rounded-[5px] gap-3 hover:bg-[#1212120c] px-2 transition-all duration-150 hover:px-5 md:justify-start"
             >
               <MdOutlineAdminPanelSettings className="w-5 h-5 text-primary" />
               Admin Panel
@@ -81,7 +83,7 @@ export default function SideNavigation() {
         <li>
           <button
             onClick={() => signOut({ callbackUrl: "/" })}
-            className="flex items-center py-3 rounded-[5px] gap-3 hover:bg-[#1212120a] px-2 w-full transition-all duration-150 hover:px-5"
+            className="flex items-center justify-center py-3 rounded-[5px] gap-3 hover:bg-[#1212120a] px-2 w-full transition-all duration-150 hover:px-5 md:justify-start"
           >
             <TbLogout className="w-5 h-5 text-primary" />
             Sign Out

@@ -1,15 +1,32 @@
-// import React from "react";
-// import Header from "@/components/ui/Header";
-// import Footer from "@/components/ui/Footer";
+"use client";
 
-// export default function Layout({ children }: { children: React.ReactNode }) {
-//   return (
-//     <div
-//         className={`${inter.className} grid h-screen grid-rows-[auto_1fr_auto]`}
-//       >
-//       <Header />
-//       <main className="text-primary mt-[90px]">{children}</main>
-//       <Footer />
-//       </div>
-//   );
-// }
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"], display: "swap" });
+
+import { usePathname } from "next/navigation";
+import Header from "@/components/ui/Header";
+import Footer from "@/components/ui/Footer";
+import WhatsAppButton from "@/components/ui/WhatsAppButton";
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const pathName = usePathname();
+
+  const showFooter =
+    pathName !== "/checkout" &&
+    !pathName.startsWith("/account") &&
+    !pathName.startsWith("/cart");
+
+  return (
+    <div
+      className={`relative ${inter.className} grid h-screen grid-rows-[auto_1fr_auto]`}
+    >
+      {pathName !== "/checkout" && <Header />}
+      <main className={`text-primary ${showFooter ? "mt-[90px]" : ""}`}>
+        {children}
+      </main>
+      {showFooter && <Footer />}
+      {showFooter && <WhatsAppButton />}
+    </div>
+  );
+}

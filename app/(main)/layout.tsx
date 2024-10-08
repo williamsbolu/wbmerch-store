@@ -1,13 +1,7 @@
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"], display: "swap" });
-
-import "@/app/_styles/globals.css";
-import Header from "@/components/ui/Header";
-import Footer from "@/components/ui/Footer";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import ReduxProvider from "@/components/ReduxProvider";
+import Layout from "@/components/ui/Layout";
 
 export const metadata = {
   title: {
@@ -28,13 +22,7 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       <ReduxProvider>
-        <div
-          className={`${inter.className} grid h-screen grid-rows-[auto_1fr_auto]`}
-        >
-          <Header />
-          <main className="text-primary mt-[90px]">{children}</main>
-          <Footer />
-        </div>
+        <Layout>{children}</Layout>
       </ReduxProvider>
     </SessionProvider>
   );

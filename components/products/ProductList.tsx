@@ -34,7 +34,7 @@ export default function ProductList({
         ))}
       </ul>
 
-      {gridType === "page" && <Pagination count={count!} />}
+      {gridType === "page" && <Pagination count={count!} size={16} />}
     </div>
   );
 }

@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import cookies from "js-cookie";
 import { useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import toast from "react-hot-toast";
+import { useTransition } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { HiOutlinePlus } from "react-icons/hi";
 import { TfiMinus } from "react-icons/tfi";
@@ -18,20 +21,37 @@ import {
   deleteCartItem,
   deleteCartQuantity,
 } from "@/actions/cart";
-import { v4 as uuidv4 } from "uuid";
-import toast from "react-hot-toast";
-import { useTransition } from "react";
 import ButtonSpinner from "../ui/ButtonSpinner";
+import { formatSizeText } from "@/utils/helpers";
+import { Size } from "@prisma/client";
+import Modal from "@/components/ui/ModalContainer";
+import ConfirmDelete from "@/components/ui/ConfirmDelete";
 
 export default function CartItem({
   productId,
   product,
   quantity,
+  productQuantityInStock,
   size,
 }: cartItemObject) {
   const [isPending, startTransition] = useTransition();
   const dispatch = useDispatch();
 
+  const getUnitQuantity = () => {
+    // Any of this three code comparison will take effect effectively
+    if (productQuantityInStock) {
+      return productQuantityInStock;
+    }
+
+    if (size && product?.sizes) {
+      return product.sizes[size as keyof typeof Size];
+    }
+
+    return product.stock;
+  };
+
+  // The total stock quantity is either the productQuantityInStock for incase the cart was added directly by the redux reducer "addItem",
+  // or by getting the stock quantity directly from stock or the sizes stock in case the cart was replaced by the user during refresh. reducer "replaceCart"
   const deleteCart = () => {
     const sessionId = cookies.get("sessionId");
 
@@ -69,6 +89,13 @@ export default function CartItem({
   }
 
   function increaseQuantityHandler() {
+    console.log(getUnitQuantity());
+
+    if (quantity >= getUnitQuantity()!) {
+      toast.error("Maximum quantity reached");
+      return;
+    }
+
     const sessionId = cookies.get("sessionId");
 
     startTransition(() => {
@@ -104,16 +131,18 @@ export default function CartItem({
           </div>
 
           <div className="grid gap-6">
-            <div className="space-y-1">
+            <div className="space-y-[6px]">
               <Link href={`/products/${product.slug}`} className="text-[15px]">
                 {product.name}
               </Link>
-              <span className="block text-[#121212BF] text-[13px] tracking-wide mb-4">
+              <span className="block text-[#121212BF] text-sm tracking-wide mb-4">
                 ${product.price}.00
               </span>
-              <span className="block text-[#121212BF] text-[13px] tracking-wide">
-                Size: {size}
-              </span>
+              {size && (
+                <span className="block text-[#121212BF] text-[13px] tracking-wide capitalize">
+                  Size: {formatSizeText(size)}
+                </span>
+              )}
             </div>
 
             <div className="flex items-center gap-4 md:hidden">
@@ -135,9 +164,20 @@ export default function CartItem({
                 </button>
               </div>
 
-              <button className="p-1" onClick={decreaseQuantityHandler}>
-                <RiDeleteBinLine className="w-4 h-4 text-primary" />
-              </button>
+              <Modal>
+                <Modal.Open opens="delete-cart-mobile">
+                  <button className="p-1" onClick={decreaseQuantityHandler}>
+                    <RiDeleteBinLine className="w-4 h-4 text-primary" />
+                  </button>
+                </Modal.Open>
+                <Modal.Window name="delete-cart-mobile">
+                  <ConfirmDelete
+                    disabled={isPending}
+                    onConfirm={deleteCart}
+                    resourceName="cart item"
+                  />
+                </Modal.Window>
+              </Modal>
             </div>
           </div>
         </div>
@@ -163,9 +203,20 @@ export default function CartItem({
             </button>
           </div>
 
-          <button className="p-1" onClick={deleteCart}>
-            <RiDeleteBinLine className="w-4 h-4 text-primary" />
-          </button>
+          <Modal>
+            <Modal.Open opens="delete-cart">
+              <button className="p-1" onClick={deleteCart}>
+                <RiDeleteBinLine className="w-4 h-4 text-primary" />
+              </button>
+            </Modal.Open>
+            <Modal.Window name="delete-cart">
+              <ConfirmDelete
+                disabled={isPending}
+                onConfirm={deleteCart}
+                resourceName="cart item"
+              />
+            </Modal.Window>
+          </Modal>
         </div>
       </td>
 

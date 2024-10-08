@@ -22,7 +22,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-3 md:px-5 my-5">
+      <section className="max-w-7xl mx-auto px-4 md:px-5 mt-5 mb-12">
         <Suspense fallback={<SkeletonHome />}>
           <RecentProductList />
         </Suspense>

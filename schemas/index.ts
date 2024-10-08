@@ -1,5 +1,15 @@
-import email from "next-auth/providers/email";
 import * as z from "zod";
+
+export const AddressFormSchema = z.object({
+  firstName: z.string().min(2, { message: "First name is required" }),
+  lastName: z.string().min(2, { message: "Last name is required" }),
+  address: z.string().min(2, { message: "Address is required" }),
+  optional: z.optional(z.string()),
+  state: z.string().min(2, { message: "State is required" }),
+  city: z.string().min(2, { message: "City is required" }),
+  postalCode: z.string().min(2, { message: "Postal code is required" }),
+  phone: z.string().min(2, { message: "Phone is required" }),
+});
 
 export const userSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),

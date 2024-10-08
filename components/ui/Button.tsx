@@ -5,7 +5,7 @@ type ButtonProps = {
   type: "link" | "button";
   variation: "primary" | "transparent";
   href?: string;
-  classes: string[];
+  classes?: string[];
   ring?: boolean;
   onClick?: () => void;
   disabled?: boolean;
@@ -34,7 +34,7 @@ export default function Button({
   };
 
   // There will always be an added class because of the width and the padding
-  const addedClasses = classes.join(" ");
+  const addedClasses = classes?.join(" ");
 
   if (type === "link") {
     return (
@@ -57,5 +57,3 @@ export default function Button({
     </button>
   );
 }
-
-// bg-[#A79B93]

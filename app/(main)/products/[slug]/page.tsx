@@ -1,8 +1,8 @@
+import { products } from "@prisma/client";
 import ProductImageSlider from "@/components/products/ProductImageSlider";
 import { getProduct } from "@/lib/data-service";
 import ProductDetail from "@/components/products/ProductDetail";
 import { ProductDetailtypes } from "@/utils/types";
-import { auth } from "@/auth";
 
 export async function generateMetadata({
   params,
@@ -17,8 +17,7 @@ export async function generateMetadata({
 }
 
 export default async function page({ params }: { params: { slug: string } }) {
-  const product = (await getProduct(params.slug)) as ProductDetailtypes;
-  const session = await auth();
+  const product = (await getProduct(params.slug)) as products;
 
   return (
     <section className="max-w-[1100px] mt-5 mb-12 mx-auto px-4 grid grid-cols-1 gap-10 md:grid-cols-2 md:mb-10 md:gap-8 lg:gap-12 md:px-5 min-[1140px]:px-0">
@@ -28,7 +27,7 @@ export default async function page({ params }: { params: { slug: string } }) {
         slug={product.slug}
       />
 
-      <ProductDetail productInfo={product} session={session} />
+      <ProductDetail productInfo={product} />
     </section>
   );
 }
