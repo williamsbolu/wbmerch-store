@@ -12,7 +12,11 @@ import OrderTag from "@/components/admin/ui/OrderTag";
 import img from "@/public/unisex-eco-raglan-hoodie-black-front-3.jpg";
 import { useRouter } from "next/navigation";
 
-const sono = Sono({ subsets: ["latin"], display: "swap" });
+const sono = Sono({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["500", "600"],
+});
 
 export default function OrderRow() {
   const [optionsOpen, setOptionsOpen] = useState(false);

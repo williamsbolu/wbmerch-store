@@ -21,7 +21,11 @@ import { useCurrency } from "@/context/CurrencyContext";
 import ConfirmRemoveProduct from "@/components/admin/ui/ConfirmProduct";
 import { toggleActiveStatus } from "@/actions/products";
 
-const sono = Sono({ subsets: ["latin"], display: "swap" });
+const sono = Sono({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["500", "600"],
+});
 
 export default function ProductRow({
   product,

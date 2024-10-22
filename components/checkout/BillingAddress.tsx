@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "../ui/Button";
 import { AddressFormSchema } from "@/schemas";
-import { BillingAddressType } from "@/utils/types";
+import { OrderAddressType } from "@/utils/types";
 
 export default function BillingAddress({
   billingAddress,
@@ -13,9 +13,9 @@ export default function BillingAddress({
   onHandleBillingAddress,
 }: {
   billingAddressType: "same" | "different";
-  billingAddress: BillingAddressType | null;
+  billingAddress: OrderAddressType | null;
   onHandleBillingAddressType: (type: "different" | "same") => void;
-  onHandleBillingAddress: (data: BillingAddressType) => void;
+  onHandleBillingAddress: (data: OrderAddressType) => void;
 }) {
   const [displayButton, setDisplayButton] = useState(true);
   const [country, setCountry] = useState<string>(

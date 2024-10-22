@@ -3,7 +3,7 @@
 import Button from "@/components/admin/ui/Button";
 import { Sono } from "next/font/google";
 
-const sono = Sono({ subsets: ["latin"], display: "swap" });
+const sono = Sono({ subsets: ["latin"], display: "swap", weight: "400" });
 
 export default function Error({
   error,
