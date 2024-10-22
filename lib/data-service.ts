@@ -2,9 +2,40 @@ import { db } from "@/lib/db";
 import { Prisma, Gender, Category, Collection } from "@prisma/client";
 import { notFound } from "next/navigation";
 
+interface ExchangeRateResponse {
+  data: Record<string, number>;
+}
+
+// We use this incase we want to fetch the rates directly from the rates api
+// export async function getExchangeRates() {
+//   const response = await fetch("/api/exchange-rates");
+//   const rates: ExchangeRateResponse = await response.json();
+
+//   const targetCurrencies = ["USD", "NGN", "GBP", "EUR", "CAD", "GHS"];
+
+//   const filteredRates = Object.entries(rates.data)
+//     .filter(([currency]) => targetCurrencies.includes(currency))
+//     .reduce<Record<string, number>>((acc, [currency, rate]) => {
+//       acc[currency] = rate;
+//       return acc;
+//     }, {});
+
+//   return filteredRates;
+// }
+
+export async function getExchangeRates() {
+  const response = await fetch("/api/exchange-rates");
+  const rates: ExchangeRateResponse = await response.json();
+
+  return rates.data;
+}
+
 export async function getRecentProducts() {
   try {
     const products = await db.products.findMany({
+      where: {
+        isActive: true,
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -35,6 +66,9 @@ export async function getAllProducts({
   try {
     const count = await db.products.count();
     const products = await db.products.findMany({
+      where: {
+        isActive: true,
+      },
       take: 16,
       skip: (page - 1) * 16,
       orderBy: {
@@ -62,6 +96,7 @@ export async function getProduct(slug: string) {
   const product = await db.products.findFirst({
     where: {
       slug: slug,
+      isActive: true,
     },
     select: {
       id: true,
@@ -133,9 +168,9 @@ export async function getSearchedProducts(queryObj: {
 
   try {
     const [totalCount, data] = await db.$transaction([
-      db.products.count({ where: whereCondition }),
+      db.products.count({ where: { ...whereCondition, isActive: true } }),
       db.products.findMany({
-        where: whereCondition,
+        where: { ...whereCondition, isActive: true },
         orderBy:
           sortField && sortOrder ? { [sortField]: sortOrder } : undefined,
 

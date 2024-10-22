@@ -15,19 +15,25 @@ import { addItem, getExistingCartItem } from "../cart/cartSlice";
 import { v4 as uuidv4 } from "uuid";
 import { addOrUpdateCart } from "@/actions/cart";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { formatSizeText } from "@/utils/helpers";
+import {
+  formatCurrency,
+  formatSizeText,
+  getCurrencySymbol,
+} from "@/utils/helpers";
 import { addToWishlist, removeFromWishlist } from "@/actions/wishlist";
 import {
   addWishlist,
   getExistingWishlistItem,
   removeWishlist,
 } from "@/components/wishlist/wishlistSlice";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export default function ProductDetail({
   productInfo: { id, name, coverImage, sizes, stock, price, slug },
 }: {
   productInfo: products;
 }) {
+  const { currency, convertPrice } = useCurrency();
   const user = useCurrentUser();
   const [selectedSize, setSelectedSize] = useState<string>("s");
   const [quantity, setQuantity] = useState<number>(1);
@@ -185,6 +191,8 @@ export default function ProductDetail({
     }
   };
 
+  const convertedPrice = convertPrice(price);
+
   return (
     <div className="grid gap-4 content-start">
       <div className="flex">
@@ -204,7 +212,10 @@ export default function ProductDetail({
         </button>
       </div>
 
-      <p className="text-lg tracking-widest">${price} USD</p>
+      <p className="text-lg tracking-widest">
+        {getCurrencySymbol(currency)}
+        {formatCurrency(convertedPrice, currency === "NGN" ? 0 : 2)} {currency}
+      </p>
 
       {sizes && (
         <div className="space-y-[7px]">

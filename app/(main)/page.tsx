@@ -1,14 +1,16 @@
+import { Suspense } from "react";
 import { Tilt_Prism } from "next/font/google";
 import RecentProductList from "@/components/products/RecentProductList";
-import { Suspense } from "react";
 import SkeletonHome from "@/components/ui/SkeletonHome";
 import Button from "@/components/ui/Button";
+import Hero from "@/components/ui/Hero";
 
 const tilt = Tilt_Prism({ subsets: ["latin"], display: "swap" });
 
 export default async function Home() {
   return (
     <>
+      <Hero />
       <section className="bg-primary">
         <div className="px-5 mx-auto flex flex-col gap-5 py-12 text-white items-center md:max-w-7xl">
           <h1

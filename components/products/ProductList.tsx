@@ -25,8 +25,8 @@ export default function ProductList({
       <ul
         className={`grid ${
           gridType === "section"
-            ? "grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-3 md:gap-x-4 md:gap-y-8 mb-10"
-            : "grid-cols-2 gap-x-3 gap-y-5 md:grid-cols-4 md:gap-y-8 lg:gap-x-5"
+            ? "grid-cols-2 gap-x-3 gap-y-7 md:grid-cols-3 md:gap-x-4 md:gap-y-8 mb-10"
+            : "grid-cols-2 gap-x-3 gap-y-7 md:grid-cols-4 md:gap-y-8 lg:gap-x-5"
         }`}
       >
         {products.map((product) => (

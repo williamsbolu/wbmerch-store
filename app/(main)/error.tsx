@@ -10,7 +10,7 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <section className="flex justify-center items-center flex-col gap-4 my-20">
+    <section className="flex justify-center items-center flex-col gap-4 mt-40 mb-20">
       <h2 className="text-3xl font-normal text-center tracking-wider">
         Something went wrong!
       </h2>

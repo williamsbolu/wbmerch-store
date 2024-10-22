@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCurrency } from "@/context/CurrencyContext";
+import { formatCurrency, getCurrencySymbol } from "@/utils/helpers";
 
 export default function ShippingMethod({
   selectedShippingMethod,
@@ -7,6 +8,11 @@ export default function ShippingMethod({
   selectedShippingMethod: "standard" | "express";
   onHandleShippingMethod: (method: "standard" | "express") => void;
 }) {
+  const { currency, convertPrice } = useCurrency();
+
+  const convertedShipping = convertPrice(10);
+  const convertedExpressShipping = convertPrice(20);
+
   return (
     <div className="mb-1">
       <h2 className="text-base mb-3">Shipping method</h2>
@@ -32,7 +38,10 @@ export default function ShippingMethod({
             </div>
             <span className="text-sm">Standard (1-3 Days)</span>
           </div>
-          <span className="text-sm">$10.00</span>
+          <span className="text-sm">
+            {getCurrencySymbol(currency)}
+            {formatCurrency(convertedShipping, currency === "NGN" ? 0 : 2)}
+          </span>
           <input
             type="radio"
             value="standard"
@@ -62,7 +71,13 @@ export default function ShippingMethod({
             </div>
             <span className="text-sm">Business express (3-7 Days)</span>
           </div>
-          <span className="text-sm">$20.00</span>
+          <span className="text-sm">
+            {getCurrencySymbol(currency)}
+            {formatCurrency(
+              convertedExpressShipping,
+              currency === "NGN" ? 0 : 2
+            )}
+          </span>
           <input
             type="radio"
             value="express"

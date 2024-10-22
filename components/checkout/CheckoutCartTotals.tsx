@@ -5,20 +5,25 @@ import { CartItem } from "@/utils/types";
 import { RiArrowDownSLine } from "react-icons/ri";
 import CheckoutCartItem from "./CheckoutCartItem";
 import Button from "../ui/Button";
+import { formatCurrency, getCurrencySymbol } from "@/utils/helpers";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export default function CheckoutCartTotals({
   cartItems,
   shipping,
+  isCheckingOut,
   shippingMethod,
   paymentMethod,
   onCheckout,
 }: {
   cartItems: CartItem[];
   shipping: number;
+  isCheckingOut: boolean;
   shippingMethod: "standard" | "express";
-  paymentMethod: "paystack" | "pay-on-delivery" | "bank-transfer";
+  paymentMethod: "card" | "pay_on_delivery" | "bank_transfer";
   onCheckout: () => void;
 }) {
+  const { currency, convertPrice } = useCurrency();
   const [displayCart, setDisplayCart] = useState(false);
 
   const totalQuantity = cartItems.reduce(
@@ -26,12 +31,17 @@ export default function CheckoutCartTotals({
     0
   );
 
-  const cartTotal = cartItems.reduce(
-    (total, item) => total + item.product.price * item.quantity,
-    0
+  const convertedShipping = convertPrice(shipping);
+
+  const cartTotal = convertPrice(
+    cartItems.reduce(
+      (total, item) => total + item.product.price * item.quantity,
+      0
+    )
   );
 
-  const cartTotalWithShipping = cartTotal + shipping;
+  // const cartTotalWithShipping = cartTotal + shipping;
+  const cartTotalWithShipping = cartTotal + convertedShipping;
 
   return (
     <div className="px-4 grid gap-10 mb-20 border-r border-solid border-gray-100 lg:mb-0 lg:pl-[38px] lg:py-[38px] lg:pr-5 lg:bg-stone-100/70">
@@ -88,21 +98,30 @@ export default function CheckoutCartTotals({
               <p>
                 Subtotal <span>({totalQuantity} items)</span>
               </p>
-              <span>${cartTotal}.00</span>
+              <span>
+                {getCurrencySymbol(currency)}
+                {formatCurrency(cartTotal, currency === "NGN" ? 0 : 2)}
+              </span>
             </div>
             <div className="flex justify-between items-center">
               <span>
                 Shipping{" "}
                 {shippingMethod === "standard" ? "(Standard)" : "(Express)"}
               </span>
-              <span>${shipping}.00</span>
+              <span>
+                {getCurrencySymbol(currency)}
+                {formatCurrency(convertedShipping, currency === "NGN" ? 0 : 2)}
+              </span>
             </div>
             <div className="flex justify-between items-center mt-3">
               <h2 className="text-[19px]">Total</h2>
               <p className="text-[19px]">
-                <span className="text-[#0000008F] text-xs">USD</span> $
-                {cartTotalWithShipping}
-                .00
+                <span className="text-[#0000008F] text-xs">{currency}</span>{" "}
+                {getCurrencySymbol(currency)}
+                {formatCurrency(
+                  cartTotalWithShipping,
+                  currency === "NGN" ? 0 : 2
+                )}
               </p>
             </div>
           </div>
@@ -111,11 +130,12 @@ export default function CheckoutCartTotals({
       <Button
         variation="primary"
         type="button"
-        classes={["font-medium lg:hidden"]}
+        classes={["font-medium flex justify-center items-center lg:hidden"]}
         ring={false}
         onClick={onCheckout}
+        disabled={isCheckingOut}
       >
-        {paymentMethod === "paystack" ? "Pay now" : "Complete order"}
+        {paymentMethod === "card" ? "Pay now" : "Complete order"}
       </Button>
     </div>
   );

@@ -1,6 +1,11 @@
 import Image from "next/image";
 import { CartItem } from "@/utils/types";
-import { formatSizeText } from "@/utils/helpers";
+import {
+  formatCurrency,
+  formatSizeText,
+  getCurrencySymbol,
+} from "@/utils/helpers";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export default function CheckoutCartItem({
   cartItem: {
@@ -11,6 +16,10 @@ export default function CheckoutCartItem({
 }: {
   cartItem: CartItem;
 }) {
+  const { currency, convertPrice } = useCurrency();
+
+  const formattedPrice = convertPrice(price);
+
   return (
     <li className="flex gap-5 lg:gap-0">
       <div className="mr-auto flex gap-4">
@@ -38,7 +47,10 @@ export default function CheckoutCartItem({
         </div>
       </div>
       <div className="flex items-center">
-        <span className="text-primary text-sm">${price}.00</span>
+        <span className="text-primary text-sm">
+          {getCurrencySymbol(currency)}
+          {formatCurrency(formattedPrice, currency === "NGN" ? 0 : 2)}
+        </span>
       </div>
     </li>
   );

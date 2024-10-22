@@ -15,14 +15,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const showFooter =
     pathName !== "/checkout" &&
     !pathName.startsWith("/account") &&
-    !pathName.startsWith("/cart");
+    !pathName.startsWith("/cart") &&
+    !pathName.startsWith("/payment-confirmation");
 
   return (
     <div
-      className={`relative ${inter.className} grid h-screen grid-rows-[auto_1fr_auto]`}
+      className={`relative ${inter.className} grid min-h-screen grid-rows-[auto_1fr_auto]`}
     >
       {pathName !== "/checkout" && <Header />}
-      <main className={`text-primary ${showFooter ? "mt-[90px]" : ""}`}>
+      <main
+        className={`text-primary overflow-x-hidden ${
+          showFooter ? "mt-[90px]" : ""
+        }`}
+      >
         {children}
       </main>
       {showFooter && <Footer />}

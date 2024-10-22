@@ -51,9 +51,9 @@ export async function GET(request: Request) {
 
   try {
     const [totalCount, data] = await db.$transaction([
-      db.products.count({ where: whereCondition }),
+      db.products.count({ where: { ...whereCondition, isActive: true } }),
       db.products.findMany({
-        where: whereCondition,
+        where: { ...whereCondition, isActive: true },
         orderBy: { name: "desc" },
         take: 10,
         select: {
@@ -81,3 +81,40 @@ export async function GET(request: Request) {
     );
   }
 }
+
+// This search query here also helps to bring out search result based on different search terms. eg: results for bags, caps, hats at the same time
+
+// const whereCondition: Prisma.productsWhereInput = {
+//   isActive: true, // for the active state,
+//   OR: [
+//     {
+//       AND: terms.map((term) => ({
+//         OR: [
+//           { name: { contains: term, mode: "insensitive" } },
+//           { description: { contains: term, mode: "insensitive" } },
+//         ],
+//       })),
+//     },
+//     {
+//       category: {
+//         in: Object.values(Category).filter((cat) =>
+//           terms.some((term) => cat.toLowerCase().includes(term))
+//         ),
+//       },
+//     },
+//     {
+//       gender: {
+//         in: Object.values(Gender).filter((gen) =>
+//           terms.some((term) => gen.toLowerCase().includes(term))
+//         ),
+//       },
+//     },
+//     {
+//       collection: {
+//         in: Object.values(Collection).filter((col) =>
+//           terms.some((term) => col.toLowerCase().includes(term))
+//         ),
+//       },
+//     },
+//   ],
+// };

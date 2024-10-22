@@ -95,11 +95,11 @@ export function getExistingCartItem(productId: string, size: string | null) {
     );
 }
 
-// export const getTotalCartAmount = (state: any) =>
-//   state.cart.cart.reduce(
-//     (sum: number, item: cartItemObject) =>
-//       sum + item.quantity * item.product.price,
-//     0
-//   );
+export const getTotalCartAmount = (state: any) =>
+  state.cart.items.reduce(
+    (sum: number, item: cartItemObject) =>
+      sum + item.quantity * item.product.price,
+    0
+  );
 
 // export const getCart = (state: any) => state.cart.products;

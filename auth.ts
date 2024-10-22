@@ -71,6 +71,10 @@ export const {
         session.user.name = token.name;
         session.user.email = token.email as string;
         session.user.phone = token.phone as string;
+        // if the user is not an oauth user
+        if (!token.isOAuth) {
+          session.user.image = token.image as string | null;
+        }
       }
 
       return session;
@@ -91,6 +95,10 @@ export const {
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.phone = existingUser.phone;
+      // if the user is not an oauth user
+      if (!existingAccount) {
+        token.image = existingUser.image;
+      }
 
       return token;
     },

@@ -1,5 +1,4 @@
 import { db } from "@/lib/db";
-import { log } from "util";
 
 export async function getAllProducts({
   page,
@@ -35,8 +34,8 @@ export async function getAllProducts({
 
     const count = await db.products.count({ where: where });
     const products = await db.products.findMany({
-      take: 5,
-      skip: (page - 1) * 5,
+      take: 10,
+      skip: (page - 1) * 10,
       orderBy: orderBy,
       where: where,
     });

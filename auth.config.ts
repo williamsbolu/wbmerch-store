@@ -17,11 +17,6 @@ export default {
       clientId: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
     }),
-    //
-    // Github({
-    //   clientId: process.env.GITHUB_CLIENT_ID,
-    //   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    // }),
     Credentials({
       async authorize(credentials) {
         const validatedFields = LoginSchema.safeParse(credentials);

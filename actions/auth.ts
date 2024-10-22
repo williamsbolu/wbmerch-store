@@ -73,7 +73,7 @@ export const login = async (
   }
 };
 
-export const signUp = async (values: z.infer<typeof LoginSchema>) => {
+export const signUp = async (values: z.infer<typeof RegisterSchema>) => {
   // 1. Server side validation
   const validatedFields = RegisterSchema.safeParse(values);
   if (!validatedFields.success) return { error: "Invalid fields!" };

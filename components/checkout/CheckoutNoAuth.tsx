@@ -41,8 +41,8 @@ export default function CheckoutNoAuth({ session }: { session: Session }) {
       {!isPending && !error && cartItems.length === 0 && (
         <CartEmpty page="checkout" />
       )}
-      {error && <p>{error}</p>}
       {/* Add the error logic also for if there is an error also if(error) <Component /> */}
+      {error && <p>{error}</p>}
     </>
   );
 }

@@ -154,10 +154,17 @@ export async function deleteProduct(productId: string) {
 
   const doc = await db.products.findUnique({
     where: { id: productId },
-    select: { coverImage: true, images: true },
+    select: { coverImage: true, images: true, sold: true },
   });
 
   if (!doc) return { error: "Product not found" };
+
+  // Prevent users from deleting products that has been sold
+  if (doc.sold > 0) {
+    return {
+      error: "You cannot delete a product that has been purchased by a user",
+    };
+  }
 
   // Delete cover image from s3 storage
   const imageName = doc.coverImage.split(".net/").pop();
@@ -331,4 +338,40 @@ export async function updateProduct(formData: FormData, productId: string) {
 
   revalidatePath("/admin/products");
   return { success: "Product created", data: modifiedData };
+}
+
+export async function toggleActiveStatus(
+  productId: string,
+  type: "add" | "remove"
+) {
+  const user = await currentUser();
+
+  if (!user) {
+    return { error: "User not found" };
+  }
+
+  if (user.role === "USER") {
+    return { error: "You are not authorized to perform this action" };
+  }
+
+  if (type === "add") {
+    await db.products.update({
+      where: { id: productId },
+      data: {
+        isActive: true,
+      },
+    });
+  } else {
+    await db.products.update({
+      where: { id: productId },
+      data: {
+        isActive: false,
+      },
+    });
+  }
+
+  revalidatePath("/admin/products");
+  return {
+    success: `Product successfully ${type === "add" ? "added" : "removed"}`,
+  };
 }

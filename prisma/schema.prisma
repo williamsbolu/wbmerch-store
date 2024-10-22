@@ -7,6 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// TODO My mistake in this project: This should be a seperate model so the fields could be updated individually
 type ProductSizes {
   s    Int @default(4)
   m    Int @default(3)
@@ -26,14 +27,17 @@ model products {
   images      String[]
   description String?
   price       Int
+  sold        Int           @default(0)
   sizes       ProductSizes?
   stock       Int?
   totalStock  Int
+  isActive    Boolean       @default(true)
   slug        String        @unique
   createdAt   DateTime      @default(now())
   v           Int           @map("__v") @ignore
-  CartItem    CartItem[]
-  Wishlist    Wishlist[]
+  cartItem    CartItem[]
+  wishlist    Wishlist[]
+  OrderItem   OrderItem[]
 }
 
 enum Category {
@@ -84,9 +88,10 @@ model User {
 
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  Cart      Cart[]
-  Wishlist  Wishlist[]
-  Address   Address[]
+  cart      Cart[]
+  wishlist  Wishlist[]
+  address   Address[]
+  orders    Order[]
 }
 
 model Account {
@@ -167,11 +172,12 @@ model CartItem {
 
 model Wishlist {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
   userId    String   @db.ObjectId
-  product   products @relation(fields: [productId], references: [id])
   productId String   @db.ObjectId
   createdAt DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id])
+  product products @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
@@ -190,5 +196,95 @@ model Address {
   postalCode String
   phone      String
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Status {
+  unconfirmed
+  confirmed
+  delivered
+}
+
+enum ShippingMethod {
+  standard
+  express
+}
+
+enum PaymentMethod {
+  bank_transfer
+  card
+  pay_on_delivery
+}
+
+// New types for Order model
+// type OrderItem {
+//   productId  String
+//   name       String
+//   coverImage String
+//   price      Int
+//   quantity   Int
+//   size       Size?
+// }
+
+type OrderAddress {
+  firstName  String
+  lastName   String
+  address    String
+  optional   String?
+  country    String
+  state      String
+  city       String
+  postalCode String
+  phone      String
+}
+
+model Order {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  referenceId     String         @unique
+  orderId         String         @unique
+  contactEmail    String?
+  userId          String?        @db.ObjectId
+  items           OrderItem[]
+  currency        String         @default("NGN")
+  status          Status         @default(unconfirmed)
+  isPaid          Boolean        @default(false)
+  shippingMethod  ShippingMethod
+  paymentMethod   PaymentMethod
+  quantity        Int
+  shippingFee     String
+  totalAmount     String
+  shippingAddress OrderAddress
+  billingAddress  OrderAddress
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model OrderItem {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String @db.ObjectId
+  productId String @db.ObjectId
+  quantity  Int
+  size      Size?
+  price     Int
+
+  order   Order    @relation(fields: [orderId], references: [id])
+  product products @relation(fields: [productId], references: [id])
+
+  @@unique([orderId, productId, size])
+}
+
+model Settings {
+  id               String @id @default(auto()) @map("_id") @db.ObjectId
+  standardShipping Int
+  expressShipping  Int
+  baseCurrency     String @default("USD")
+
+  // Conversion Rates
+  NGN Float
+  GBP Float
+  CAD Float
+  GHS Float
+  EUR Float
 }

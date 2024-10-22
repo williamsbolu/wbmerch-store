@@ -1,3 +1,7 @@
+"use client";
+
+import { useCurrency } from "@/context/CurrencyContext";
+import { formatCurrency, getCurrencySymbol } from "@/utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,6 +18,9 @@ type ProductProps = {
 };
 
 export default function Product({ product }: ProductProps) {
+  const { currency, convertPrice } = useCurrency();
+  const price = convertPrice(product.price);
+
   return (
     <li className="relative group flex flex-col gap-4">
       <Link
@@ -36,7 +43,10 @@ export default function Product({ product }: ProductProps) {
         >
           {product.name}
         </Link>
-        <p className="text-base tracking-wider">${product.price} USD</p>
+        <p className="text-base tracking-wider">
+          {getCurrencySymbol(currency)}
+          {formatCurrency(price, currency === "NGN" ? 0 : 2)} {currency}
+        </p>
       </div>
     </li>
   );

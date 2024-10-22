@@ -23,7 +23,7 @@ export function LoadingBar() {
     // Use a timeout to simulate the end of the initial load or route change
     const timer = setTimeout(() => {
       handleComplete();
-    }, 300); // Adjust this value as needed
+    }, 300);
 
     return () => {
       clearTimeout(timer);

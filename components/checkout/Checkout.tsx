@@ -12,12 +12,13 @@ import Button from "@/components/ui/Button";
 import CheckoutAddressList from "@/components/checkout/CheckoutAddressList";
 import BillingAddress from "@/components/checkout/BillingAddress";
 import { signOut } from "next-auth/react";
-import { BillingAddressType } from "@/utils/types";
+import { OrderAddressType } from "@/utils/types";
 
 export default function Checkout({
   addresses,
   session,
   contactEmail,
+  isCheckingOut,
   shippingMethod,
   paymentMethod,
   billingAddressType,
@@ -32,17 +33,18 @@ export default function Checkout({
   addresses: Address[];
   session: Session;
   contactEmail: string;
+  isCheckingOut: boolean;
   shippingMethod: "standard" | "express";
-  paymentMethod: "paystack" | "pay-on-delivery" | "bank-transfer";
+  paymentMethod: "card" | "pay_on_delivery" | "bank_transfer";
   billingAddressType: "same" | "different";
-  billingAddress: BillingAddressType | null;
+  billingAddress: OrderAddressType | null;
   onSetContactEmail: (email: string) => void;
   onHandleShippingMethod: (method: "standard" | "express") => void;
   onHandlePaymentMethod: (
-    method: "paystack" | "pay-on-delivery" | "bank-transfer"
+    method: "card" | "pay_on_delivery" | "bank_transfer"
   ) => void;
   onHandleBillingAddressType: (type: "different" | "same") => void;
-  onHandleBillingAddress: (data: BillingAddressType) => void;
+  onHandleBillingAddress: (data: OrderAddressType) => void;
   onCheckout: () => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -128,11 +130,12 @@ export default function Checkout({
       <Button
         variation="primary"
         type="button"
-        classes={["hidden font-medium lg:block"]}
+        classes={["hidden font-medium lg:flex justify-center items-center"]}
         ring={false}
         onClick={onCheckout}
+        disabled={isCheckingOut}
       >
-        {paymentMethod === "paystack" ? "Pay now" : "Complete order"}
+        {paymentMethod === "card" ? "Pay now" : "Complete order"}
       </Button>
     </div>
   );

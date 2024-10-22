@@ -1,4 +1,4 @@
-import { Size } from "@prisma/client";
+import { PaymentMethod, ShippingMethod, Size } from "@prisma/client";
 
 export type Sizes = {
   s: number;
@@ -35,7 +35,7 @@ export type AddressType = {
   optional?: string | undefined;
 };
 
-export type BillingAddressType = {
+export type OrderAddressType = {
   country: string;
   firstName: string;
   lastName: string;
@@ -44,7 +44,7 @@ export type BillingAddressType = {
   city: string;
   postalCode: string;
   phone: string;
-  optional?: string | undefined;
+  optional?: string;
 };
 
 export type CartItem = {
@@ -101,5 +101,32 @@ export interface FormattedProductData
     xl: number;
     xxl: number;
     xxxl: number;
+  };
+}
+
+export interface OrderData {
+  contactEmail?: string;
+  userId?: string;
+  items: CartItem[];
+  currency: string;
+  shippingMethod: ShippingMethod;
+  paymentMethod: PaymentMethod;
+  shippingAddress: OrderAddressType;
+  billingAddress: OrderAddressType;
+  quantity: number;
+  shippingFee: string;
+  totalAmount: string;
+}
+
+export interface OrderItem {
+  productId: string;
+  size: Size;
+  quantity: number;
+  product: {
+    name: string;
+    coverImage: string;
+    price: number;
+    stock: number;
+    slug: string;
   };
 }

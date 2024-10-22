@@ -22,10 +22,15 @@ import {
   deleteCartQuantity,
 } from "@/actions/cart";
 import ButtonSpinner from "../ui/ButtonSpinner";
-import { formatSizeText } from "@/utils/helpers";
+import {
+  formatCurrency,
+  formatSizeText,
+  getCurrencySymbol,
+} from "@/utils/helpers";
 import { Size } from "@prisma/client";
 import Modal from "@/components/ui/ModalContainer";
 import ConfirmDelete from "@/components/ui/ConfirmDelete";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export default function CartItem({
   productId,
@@ -34,6 +39,7 @@ export default function CartItem({
   productQuantityInStock,
   size,
 }: cartItemObject) {
+  const { currency, convertPrice } = useCurrency();
   const [isPending, startTransition] = useTransition();
   const dispatch = useDispatch();
 
@@ -89,8 +95,6 @@ export default function CartItem({
   }
 
   function increaseQuantityHandler() {
-    console.log(getUnitQuantity());
-
     if (quantity >= getUnitQuantity()!) {
       toast.error("Maximum quantity reached");
       return;
@@ -117,6 +121,8 @@ export default function CartItem({
     });
   }
 
+  const price = convertPrice(product.price);
+
   return (
     <tr className="relative last:mb-20">
       <td className="py-5">
@@ -136,7 +142,8 @@ export default function CartItem({
                 {product.name}
               </Link>
               <span className="block text-[#121212BF] text-sm tracking-wide mb-4">
-                ${product.price}.00
+                {getCurrencySymbol(currency)}
+                {formatCurrency(price, currency === "NGN" ? 0 : 2)}
               </span>
               {size && (
                 <span className="block text-[#121212BF] text-[13px] tracking-wide capitalize">
@@ -223,7 +230,8 @@ export default function CartItem({
       <td className="pl-3 md:pl-10 grid py-5 md:table-cell">
         <div className="text-right">
           <span className="inline-block tracking-wider">
-            ${product.price}.00
+            {getCurrencySymbol(currency)}
+            {formatCurrency(price * quantity, currency === "NGN" ? 0 : 2)}
           </span>
         </div>
       </td>

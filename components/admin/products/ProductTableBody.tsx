@@ -16,7 +16,7 @@ export default async function ProductTableBody({
   return (
     <>
       <ProductTableContainer products={data} />
-      <Pagination count={count} size={5} />
+      <Pagination count={count} size={10} />
     </>
   );
 }

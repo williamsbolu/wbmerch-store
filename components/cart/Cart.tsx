@@ -6,16 +6,22 @@ import CartItem from "./CartItem";
 import CartTableHead from "./CartTableHead";
 import { useSelector } from "react-redux";
 import CartEmpty from "./CartEmpty";
-import { cartItemObject } from "./cartSlice";
+import { cartItemObject, getTotalCartAmount } from "./cartSlice";
 import { useRouter } from "next/navigation";
+import { useCurrency } from "@/context/CurrencyContext";
+import { formatCurrency, getCurrencySymbol } from "@/utils/helpers";
 
 export default function Cart() {
+  const { currency, convertPrice } = useCurrency();
   const products = useSelector((state: any) => state.cart.items);
+  const cartTotals = useSelector(getTotalCartAmount);
   const router = useRouter();
 
   if (!products || products.length === 0) {
     return <CartEmpty />;
   }
+
+  const convertedCartTotals = convertPrice(cartTotals);
 
   return (
     <section className="max-w-[1100px] mt-[132px] mb-20 mx-auto px-4 md:px-5 min-[1140px]:px-0">
@@ -43,7 +49,14 @@ export default function Cart() {
         <div className="text-[#121212BF] mt-16 mb-12 grid gap-3 justify-items-center md:justify-items-end">
           <div className="flex items-center gap-5 justify-center">
             <h2 className="text-base text-primary tracking-wider">Subtotal</h2>
-            <p className="text-lg font-normal tracking-wider">$1,000.00 USD</p>
+            <p className="text-lg font-normal tracking-wider">
+              {getCurrencySymbol(currency)}
+              {formatCurrency(
+                convertedCartTotals,
+                currency === "NGN" ? 0 : 2
+              )}{" "}
+              {currency}
+            </p>
           </div>
 
           <p className="text-[13px] tracking-wide md:justify-self-end mb-1">

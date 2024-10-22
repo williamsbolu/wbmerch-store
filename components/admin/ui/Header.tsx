@@ -24,7 +24,7 @@ export default function Header({
 
       <ul className="flex items-center gap-1">
         <li>
-          <ButtonIcon type="link" to="/account">
+          <ButtonIcon type="link" to="/admin/account">
             <HiOutlineUser className="w-[22px] h-[22px] text-indigo-600" />
           </ButtonIcon>
         </li>

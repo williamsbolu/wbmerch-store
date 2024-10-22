@@ -30,13 +30,14 @@ export default function Page({
           role="table"
         >
           <div
-            className="grid grid-cols-[3fr_1.5fr_1.3fr_1fr_1fr_0.5fr] gap-6 items-center py-4 px-3 bg-gray-50 border-b border-solid border-gray-100 uppercase tracking-wide font-semibold text-gray-600"
+            className="grid grid-cols-[3fr_1.3fr_1.3fr_1.3fr_0.7fr_0.7fr_0.5fr] gap-6 items-center py-4 pl-3 pr-6 bg-gray-50 border-b border-solid border-gray-100 uppercase tracking-wide font-semibold text-gray-600"
             role="row"
           >
             <div className="justify-self-center">Product Name</div>
             <div>Category</div>
             <div>Status</div>
             <div>Price</div>
+            <div className="justify-self-center">Sold</div>
             <div className="justify-self-center">Stock</div>
           </div>
 

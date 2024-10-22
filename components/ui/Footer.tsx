@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { PiArrowRightThin } from "react-icons/pi";
 import { LiaInstagram } from "react-icons/lia";
+import CurrencySwitcher from "@/components/ui/CurrencySwitcher";
 
 export default function Footer() {
   return (
@@ -32,16 +32,7 @@ export default function Footer() {
       <div className="h-[1px] bg-[#12121218]"></div>
 
       <div className="max-w-7xl mx-auto pb-10 pt-14 px-5 space-y-14">
-        <form>
-          <p className="text-[13px] text-[#121212BF] mb-2">Country/region</p>
-
-          <select className="bg-white text-primary border border-primary rounded-[5px] text-[13px] px-4 h-11 focus:outline-none">
-            <option value="">Nigeria (NGN &#8358;)</option>
-            <option value="">United Kindom (GBP &euro;)</option>
-            <option value="">United States (USD &#36;)</option>
-          </select>
-        </form>
-
+        <CurrencySwitcher />
         <p className="text-[11px] text-[#121212BF]">&copy; 2024 - WB</p>
       </div>
     </footer>

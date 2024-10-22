@@ -69,7 +69,7 @@ export default function SideNavigation() {
             </Link>
           </li>
         )}
-        {user?.role === "ADMIN" && (
+        {user?.role !== "USER" && (
           <li>
             <Link
               href="/admin"

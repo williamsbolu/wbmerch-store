@@ -33,6 +33,7 @@ export default function ProductImageSlider({
     >
       <div>
         <Swiper
+          cssMode={true}
           modules={[Pagination, Autoplay, EffectFade]}
           pagination={{
             dynamicBullets: true,

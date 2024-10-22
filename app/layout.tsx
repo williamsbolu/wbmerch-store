@@ -2,6 +2,7 @@ import { Toaster } from "react-hot-toast";
 
 import "@/app/_styles/globals.css";
 import { LoadingBar } from "@/hooks/LoadingBar";
+import { CurrencyProvider } from "@/context/CurrencyContext";
 
 export default async function RootLayout({
   children,
@@ -19,7 +20,8 @@ export default async function RootLayout({
       </head>
       <body>
         <LoadingBar />
-        {children}
+
+        <CurrencyProvider>{children}</CurrencyProvider>
 
         <Toaster
           position="top-right"
