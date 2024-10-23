@@ -73,6 +73,7 @@ export async function getLiveUpdates(id: string) {
     },
   });
 
+  revalidatePath("/");
   revalidatePath("/admin/settings");
   return { success: "Settings updated" };
 }

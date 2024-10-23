@@ -27,6 +27,16 @@ export const CurrencyProvider = ({
   const [currency, setCurrency] = useState<Currency>("USD");
   const [rates, setRates] = useState<Record<string, number>>({});
 
+  const fetchRates = async () => {
+    try {
+      const fetchedRates = await getExchangeRates();
+      setRates(fetchedRates!);
+    } catch (err) {
+      console.log({ err });
+      setCurrency("USD");
+    }
+  };
+
   useEffect(() => {
     // Ensure localStorage is only accessed in the client
     if (typeof window !== "undefined") {
@@ -37,16 +47,6 @@ export const CurrencyProvider = ({
         localStorage.setItem("currency", "USD");
       }
     }
-
-    const fetchRates = async () => {
-      try {
-        const fetchedRates = await getExchangeRates();
-        setRates(fetchedRates!);
-      } catch (err) {
-        console.log({ err });
-        setCurrency("USD");
-      }
-    };
 
     fetchRates();
   }, []);

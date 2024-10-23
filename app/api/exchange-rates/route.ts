@@ -20,5 +20,13 @@ export async function GET(request: Request) {
     },
   });
 
-  return Response.json({ data: rates });
+  return Response.json(
+    { data: rates },
+    {
+      headers: {
+        "Cache-Control": "no-store, must-revalidate",
+        "Content-Type": "application/json",
+      },
+    }
+  );
 }
