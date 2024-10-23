@@ -73,7 +73,7 @@ export default function Page() {
           </label>
           <input
             type="text"
-            className="border border-solid border-primary/40 bg-[#EFEFEF4D] text-gray-400 focus:border-primary py-[10px] px-3 text-sm rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm disabled:cursor-not-allowed"
+            className="border border-solid border-primary/40 bg-[#EFEFEF4D] text-gray-600 focus:border-primary py-[10px] px-3 text-sm rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm disabled:cursor-not-allowed"
             {...register("email")}
             disabled
           />

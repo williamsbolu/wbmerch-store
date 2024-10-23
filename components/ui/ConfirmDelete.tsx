@@ -18,10 +18,10 @@ export default function ConfirmDelete({
 }) {
   return (
     <div
-      className={`${inter.className} p-4 pt-12 text-center min-[440px]:w-[400px]`}
+      className={`${inter.className} p-4 pt-10 text-center min-[440px]:w-[400px] md:pt-12`}
     >
       <span className="inline-block w-fit mx-auto">
-        <CiCircleQuestion className="w-14 h-14 text-primary/80" />
+        <CiCircleQuestion className="w-12 h-12 text-primary/80 md:w-14 md:h-14" />
       </span>
       <p className="mt-1">
         Are you sure you want to delete this {resourceName}?

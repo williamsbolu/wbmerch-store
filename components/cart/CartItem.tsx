@@ -184,7 +184,7 @@ export default function CartItem({
                   <ConfirmDelete
                     disabled={isPending}
                     onConfirm={deleteCart}
-                    resourceName="cart item"
+                    resourceName="item"
                   />
                 </Modal.Window>
               </Modal>
@@ -223,7 +223,7 @@ export default function CartItem({
               <ConfirmDelete
                 disabled={isPending}
                 onConfirm={deleteCart}
-                resourceName="cart item"
+                resourceName="item"
               />
             </Modal.Window>
           </Modal>

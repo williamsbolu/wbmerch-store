@@ -17,7 +17,7 @@ export default function Hero() {
           disableOnInteraction: false,
         }}
         modules={[Autoplay]}
-        className="mySwiper w-screen h-fit relative overflow-hidden md:h-[40vw] xl:h-[600px]"
+        className="mySwiper w-screen h-[90vw] relative overflow-hidden sm:h-[75vw] md:h-[40vw] xl:h-[600px]"
       >
         <SwiperSlide>
           <Link href="/collections/all" className="relative">
