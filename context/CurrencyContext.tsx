@@ -35,9 +35,12 @@ export const CurrencyProvider = ({
   const fetchRates = async () => {
     try {
       // const fetchedRates = await getExchangeRates();
-      const response = await fetch("/api/exchange-rates", {
-        cache: "no-store",
-      });
+      const response = await fetch(
+        `/api/exchange-rates?q=${Math.random().toString()}`,
+        {
+          cache: "no-store",
+        }
+      );
       const rates: ExchangeRateResponse = await response.json();
       setRates(rates.data);
     } catch (err) {
