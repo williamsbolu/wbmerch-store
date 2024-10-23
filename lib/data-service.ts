@@ -23,12 +23,12 @@ interface ExchangeRateResponse {
 //   return filteredRates;
 // }
 
-export async function getExchangeRates() {
-  const response = await fetch("/api/exchange-rates", { cache: "no-store" });
-  const rates: ExchangeRateResponse = await response.json();
+// export async function getExchangeRates() {
+//   const response = await fetch("/api/exchange-rates", { cache: "no-store" });
+//   const rates: ExchangeRateResponse = await response.json();
 
-  return rates.data;
-}
+//   return rates.data;
+// }
 
 export async function getRecentProducts() {
   try {
