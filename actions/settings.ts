@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 
@@ -33,6 +33,7 @@ export async function updateSettings(settings: SettingsUpdate, id: string) {
     },
   });
 
+  revalidateTag("rates");
   revalidatePath("/admin/settings");
   return { success: "Settings updated" };
 }
