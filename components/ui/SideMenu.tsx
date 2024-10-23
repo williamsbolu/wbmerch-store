@@ -33,6 +33,7 @@ export default function SideMenu({
         <div className="px-[10px] py-4">
           <Link
             href="/cart"
+            onClick={onCloseModal}
             className="flex items-center justify-between border-[0.08rem] border-solid border-primary p-[10px] py-2"
           >
             <p>
@@ -49,12 +50,17 @@ export default function SideMenu({
 
         <ul className="px-[10px] mt-4 text-sm">
           <li className="border-b border-primary border-solid py-3 px-[10px]">
-            <Link href="/collections/all" className="tracking-wider">
+            <Link
+              href="/collections/all"
+              onClick={onCloseModal}
+              className="tracking-wider"
+            >
               New Arrivals
             </Link>
           </li>
           <ListDropdown
             text="Men"
+            onCloseModal={onCloseModal!}
             dropDown={[
               { text: "All", path: "/collections/all" },
               { text: "Bags", path: "/collections/all" },
@@ -63,6 +69,7 @@ export default function SideMenu({
           />
           <ListDropdown
             text="Women"
+            onCloseModal={onCloseModal!}
             dropDown={[
               { text: "All", path: "/collections/all" },
               { text: "Bags", path: "/collections/all" },
@@ -71,6 +78,7 @@ export default function SideMenu({
           />
           <ListDropdown
             text="Collections"
+            onCloseModal={onCloseModal!}
             dropDown={[
               { text: "All", path: "/collections/all" },
               { text: "Hoodies", path: "/collections/all" },
@@ -80,7 +88,11 @@ export default function SideMenu({
           {!user && (
             <li className="flex items-center gap-4 border-b border-primary border-solid py-3 px-[10px]">
               <BiUser className="w-[19px] h-[19px] text-primary" />
-              <Link href="/" className="tracking-wider">
+              <Link
+                href="/login"
+                onClick={onCloseModal}
+                className="tracking-wider"
+              >
                 Log In/Create Account
               </Link>
             </li>
@@ -89,6 +101,7 @@ export default function SideMenu({
             <li className="flex items-center gap-4 border-b border-primary border-solid py-3 px-[10px]">
               <Link
                 href="/account/information"
+                onClick={onCloseModal}
                 className="flex items-center gap-3"
               >
                 <BiUser className="w-[19px] h-[19px] text-primary" />

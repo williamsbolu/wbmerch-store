@@ -12,9 +12,14 @@ type DropdownProps = {
 type ListDropdownProps = {
   text: string;
   dropDown: DropdownProps[];
+  onCloseModal: () => void;
 };
 
-export default function ListDropdown({ text, dropDown }: ListDropdownProps) {
+export default function ListDropdown({
+  text,
+  dropDown,
+  onCloseModal,
+}: ListDropdownProps) {
   const [dropdownEnabled, setDropdownEnabled] = useState<boolean>(false);
 
   return (
@@ -41,7 +46,7 @@ export default function ListDropdown({ text, dropDown }: ListDropdownProps) {
               key={link.path}
               className="border-b border-primary border-solid py-3 px-[10px]"
             >
-              <Link href={link.path} className="block">
+              <Link href={link.path} onClick={onCloseModal} className="block">
                 {link.text}
               </Link>
             </li>

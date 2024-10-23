@@ -8,6 +8,7 @@ export const publicRoutes = [
   "/auth/new-verification",
   "/products/:slug",
   "/cart",
+  "/search",
   "/payment-confirmation",
   "/payment-success",
   "/payment-failed",

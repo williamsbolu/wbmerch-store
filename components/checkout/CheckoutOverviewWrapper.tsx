@@ -174,13 +174,15 @@ export default function CheckoutOverviewWrapper({
     }
   }
 
+  const cartTotalWithShipping = convertPrice(caculateTotal());
+
   return (
     <section className="max-w-xl mx-auto min-h-screen grid lg:grid-cols-[1.5fr_1.2fr] lg:max-w-[1100px]">
       <div className="px-4 bg-stone-100/70 border-b border-solid border-gray-200 flex justify-between items-center py-4 mb-3 lg:hidden">
         <p className="text-sm tracking-wide">Cart Totals:</p>
         <span className="text-lg">
           {getCurrencySymbol(currency)}
-          {formatCurrency(cartTotal)}
+          {formatCurrency(cartTotalWithShipping, currency === "NGN" ? 0 : 2)}
         </span>
       </div>
       <div className="px-4 mb-8 lg:py-[38px] lg:pr-[38px] lg:border-r lg:border-solid lg:border-gray-300 lg:mb-0">

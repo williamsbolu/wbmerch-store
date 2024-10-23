@@ -6,7 +6,7 @@ export default function WhatsAppButton() {
 
   return (
     <div
-      className="fixed z-10 bottom-[30px] right-7 flex items-center gap-3 md:bottom-[30px] md:right-[30px]"
+      className="fixed z-10 bottom-[30px] right-5 flex items-center gap-3 md:bottom-[30px] md:right-[30px]"
       // onMouseEnter={() => setIsHovered(true)}
       // onMouseLeave={() => setIsHovered(false)}
     >

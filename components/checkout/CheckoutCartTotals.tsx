@@ -24,7 +24,7 @@ export default function CheckoutCartTotals({
   onCheckout: () => void;
 }) {
   const { currency, convertPrice } = useCurrency();
-  const [displayCart, setDisplayCart] = useState(false);
+  const [displayCart, setDisplayCart] = useState(true);
 
   const totalQuantity = cartItems.reduce(
     (total, item) => total + item.quantity,

@@ -10,6 +10,12 @@
   color: #fff;
 }
 
+input,
+textarea,
+select {
+  font-size: 16px !important;
+}
+
 .stop-scrolling {
   height: 100%;
   overflow: hidden;

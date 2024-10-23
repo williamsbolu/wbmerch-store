@@ -199,7 +199,7 @@ export default function AddressForm({
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:gap-3">
         <select
-          className="bg-white border border-gray-400 text-sm rounded-[5px] focus:outline-none py-[10px] px-3"
+          className="bg-white border border-gray-400 text-sm rounded-[5px] focus:outline-none py-[10px] h-10 px-3"
           onChange={(e) => setCountry(e.target.value)}
           defaultValue={country}
         >

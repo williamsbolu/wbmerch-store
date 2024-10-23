@@ -126,8 +126,8 @@ export default function CartItem({
   return (
     <tr className="relative last:mb-20">
       <td className="py-5">
-        <div className="flex items-center gap-5 sm:gap-8 md:gap-10">
-          <div className="relative h-28 w-28 rounded-xl overflow-hidden">
+        <div className="flex gap-3 items-start sm:items-center sm:gap-8 md:gap-10">
+          <div className="relative h-20 w-20 rounded-xl overflow-hidden sm:h-28 sm:w-28">
             <Image
               src={product.coverImage}
               alt={product.name}
@@ -136,24 +136,27 @@ export default function CartItem({
             />
           </div>
 
-          <div className="grid gap-6">
+          <div className="grid gap-4 sm:gap-6">
             <div className="space-y-[6px]">
-              <Link href={`/products/${product.slug}`} className="text-[15px]">
+              <Link
+                href={`/products/${product.slug}`}
+                className="text-sm sm:text-[15px]"
+              >
                 {product.name}
               </Link>
-              <span className="block text-[#121212BF] text-sm tracking-wide mb-4">
+              <span className="block text-[#121212BF] text-[13px]  tracking-wide mb-4 sm:text-sm">
                 {getCurrencySymbol(currency)}
                 {formatCurrency(price, currency === "NGN" ? 0 : 2)}
               </span>
               {size && (
-                <span className="block text-[#121212BF] text-[13px] tracking-wide capitalize">
+                <span className="block text-[#121212BF] text-xs tracking-wide capitalize sm:text-[13px]">
                   Size: {formatSizeText(size)}
                 </span>
               )}
             </div>
 
-            <div className="flex items-center gap-4 md:hidden">
-              <div className="grid grid-cols-[45px_50px_45px] h-[47px] border-[1px] border-solid border-primary rounded-[5px] w-max">
+            <div className="flex items-center gap-2 sm:gap-4 md:hidden">
+              <div className="grid grid-cols-[35px_40px_35px] h-[37px] border-[1px] border-solid border-primary rounded-[5px] w-max sm:h-[47px] sm:grid-cols-[45px_50px_45px]">
                 <button
                   className="flex items-center justify-center"
                   onClick={decreaseQuantityHandler}
