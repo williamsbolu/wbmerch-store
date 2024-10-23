@@ -33,7 +33,6 @@ export async function updateSettings(settings: SettingsUpdate, id: string) {
     },
   });
 
-  revalidatePath("/");
   revalidatePath("/admin/settings");
   return { success: "Settings updated" };
 }
@@ -73,7 +72,6 @@ export async function getLiveUpdates(id: string) {
     },
   });
 
-  revalidatePath("/");
   revalidatePath("/admin/settings");
   return { success: "Settings updated" };
 }

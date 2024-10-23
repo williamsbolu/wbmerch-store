@@ -1,5 +1,7 @@
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 // export async function GET(request: Request) {
 //   const response = await fetch(
 //     "https://v6.exchangerate-api.com/v6/3a3ca50a63e86c489315983e/latest/USD"
@@ -24,8 +26,7 @@ export async function GET(request: Request) {
     { data: rates },
     {
       headers: {
-        "Cache-Control": "no-store, must-revalidate",
-        "Content-Type": "application/json",
+        "Cache-Control": "no-store",
       },
     }
   );

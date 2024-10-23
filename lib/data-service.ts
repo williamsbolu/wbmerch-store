@@ -24,10 +24,7 @@ interface ExchangeRateResponse {
 // }
 
 export async function getExchangeRates() {
-  const response = await fetch("/api/exchange-rates", {
-    cache: "no-store",
-    next: { revalidate: 0 },
-  });
+  const response = await fetch("/api/exchange-rates");
   const rates: ExchangeRateResponse = await response.json();
 
   console.log({ rates: rates.data });
