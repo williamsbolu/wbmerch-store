@@ -11,9 +11,9 @@ export default function PaymentMethod({
   selectedPaymentOption,
   onHandlePaymentMethod,
 }: {
-  selectedPaymentOption: "card" | "bank-transfer" | "pay_on_delivery";
+  selectedPaymentOption: "card" | "bank_transfer" | "pay_on_delivery";
   onHandlePaymentMethod: (
-    method: "card" | "pay_on_delivery" | "bank-transfer"
+    method: "card" | "pay_on_delivery" | "bank_transfer"
   ) => void;
 }) {
   const { currency, rates } = useCurrency();
@@ -23,7 +23,7 @@ export default function PaymentMethod({
   };
 
   const changePaymentMethod = (
-    method: "card" | "bank-transfer" | "pay_on_delivery"
+    method: "card" | "bank_transfer" | "pay_on_delivery"
   ) => {
     onHandlePaymentMethod(method);
   };
@@ -160,7 +160,7 @@ export default function PaymentMethod({
         </div>
         <label
           className={`relative flex items-center justify-between h-[50px] px-4 border ${
-            selectedPaymentOption === "bank-transfer"
+            selectedPaymentOption === "bank_transfer"
               ? "border-black bg-stone-100/70"
               : "border-gray-300 rounded-b-[5px]"
           } cursor-pointer transition-all duration-200 ease-in-out`}
@@ -168,12 +168,12 @@ export default function PaymentMethod({
           <div className="flex items-center">
             <div
               className={`w-[18px] h-[18px] rounded-full border mr-3 flex items-center justify-center ${
-                selectedPaymentOption === "bank-transfer"
+                selectedPaymentOption === "bank_transfer"
                   ? "border-black bg-black"
                   : "border-gray-300"
               } transition-all duration-200 ease-in-out`}
             >
-              {selectedPaymentOption === "bank-transfer" && (
+              {selectedPaymentOption === "bank_transfer" && (
                 <div className="w-[6px] h-[6px] rounded-full bg-white"></div>
               )}
             </div>
@@ -183,14 +183,14 @@ export default function PaymentMethod({
             type="radio"
             name="paymentOption"
             value="bank-transfer"
-            checked={selectedPaymentOption === "bank-transfer"}
-            onChange={() => changePaymentMethod("bank-transfer")}
+            checked={selectedPaymentOption === "bank_transfer"}
+            onChange={() => changePaymentMethod("bank_transfer")}
             className="sr-only"
           />
         </label>
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            selectedPaymentOption === "bank-transfer" ? "max-h-96" : "max-h-0"
+            selectedPaymentOption === "bank_transfer" ? "max-h-96" : "max-h-0"
           }`}
         >
           {renderBankTransferContent()}
