@@ -26,6 +26,7 @@ export const CurrencyProvider = ({
 }) => {
   const [currency, setCurrency] = useState<Currency>("USD");
   const [rates, setRates] = useState<Record<string, number>>({});
+  console.log({ rates });
 
   const fetchRates = async () => {
     try {
