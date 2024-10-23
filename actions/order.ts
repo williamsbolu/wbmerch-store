@@ -76,6 +76,7 @@ export async function initiatePayment(
   const customerName = user
     ? user.name
     : `${data.shippingAddress.firstName} ${data.shippingAddress.lastName}`;
+  const domain = process.env.Next_PUBLIC_APP_URL;
 
   const response = await axios.post(
     "https://api.flutterwave.com/v3/payments",
@@ -83,7 +84,7 @@ export async function initiatePayment(
       tx_ref: transactionRef,
       amount: data.totalAmount,
       currency: data.currency,
-      redirect_url: "http://localhost:3000/payment-confirmation",
+      redirect_url: `${domain}/payment-confirmation`,
       customer: {
         email: customerEmail,
         name: customerName,
