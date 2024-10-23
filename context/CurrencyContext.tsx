@@ -1,6 +1,6 @@
 "use client";
 
-// import { getExchangeRates } from "@/lib/data-service";
+import { getExchangeRates } from "@/lib/data-service";
 import { createContext, useContext, useEffect, useState } from "react";
 
 export type Currency = "USD" | "NGN" | "EUR" | "GBP" | "CAD" | "GHS";
@@ -11,10 +11,6 @@ type CurrencyContextType = {
   rates: Record<string, number>;
   convertPrice: (amount: number) => number;
 };
-
-interface ExchangeRateResponse {
-  data: Record<string, number>;
-}
 
 export const CurrencyContext = createContext<CurrencyContextType>({
   currency: "USD",
@@ -30,19 +26,11 @@ export const CurrencyProvider = ({
 }) => {
   const [currency, setCurrency] = useState<Currency>("USD");
   const [rates, setRates] = useState<Record<string, number>>({});
-  console.log({ rates });
 
   const fetchRates = async () => {
     try {
-      // const fetchedRates = await getExchangeRates();
-      const response = await fetch(
-        `/api/exchange-rates?q=${Math.random().toString()}`,
-        {
-          cache: "no-store",
-        }
-      );
-      const rates: ExchangeRateResponse = await response.json();
-      setRates(rates.data);
+      const fetchedRates = await getExchangeRates();
+      setRates(fetchedRates!);
     } catch (err) {
       console.log({ err });
       setCurrency("USD");

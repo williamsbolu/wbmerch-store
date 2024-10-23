@@ -25,7 +25,6 @@ export default function SearchBar({
   onCloseModal?: () => void;
 }) {
   const router = useRouter();
-  const [query, setQuery] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<String | null>(null);
