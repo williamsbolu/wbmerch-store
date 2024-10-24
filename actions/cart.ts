@@ -21,6 +21,11 @@ export async function getOrCreateCart({
       },
       include: {
         items: {
+          where: {
+            product: {
+              isActive: true, // only get active products
+            },
+          },
           select: {
             id: true,
             cartId: true,
@@ -110,6 +115,11 @@ export async function getOrCreateCart({
       where: { sessionId },
       include: {
         items: {
+          where: {
+            product: {
+              isActive: true, // only get active products
+            },
+          },
           select: {
             id: true,
             cartId: true,

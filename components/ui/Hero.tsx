@@ -10,7 +10,7 @@ import "swiper/css";
 
 export default function Hero() {
   return (
-    <section className="mb-3 md:mb-4">
+    <section className="">
       <Swiper
         autoplay={{
           delay: 13000,

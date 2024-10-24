@@ -14,6 +14,9 @@ export async function getUserWishlist() {
   const wishlist = await db.wishlist.findMany({
     where: {
       userId: user.id,
+      product: {
+        isActive: true, // only get active products
+      },
     },
     select: {
       id: true,

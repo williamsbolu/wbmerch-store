@@ -2,15 +2,6 @@ import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-// export async function GET(request: Request) {
-//   const response = await fetch(
-//     "https://v6.exchangerate-api.com/v6/3a3ca50a63e86c489315983e/latest/USD"
-//   );
-//   const data = await response.json();
-
-//   return Response.json({ data: data.conversion_rates });
-// }
-
 export async function GET(request: Request) {
   const rates = await db.settings.findFirst({
     select: {
@@ -31,3 +22,12 @@ export async function GET(request: Request) {
     }
   );
 }
+
+// export async function GET(request: Request) {
+//   const response = await fetch(
+//     "https://v6.exchangerate-api.com/v6/3a3ca50a63e86c489315983e/latest/USD"
+//   );
+//   const data = await response.json();
+
+//   return Response.json({ data: data.conversion_rates });
+// }
