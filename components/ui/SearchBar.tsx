@@ -85,7 +85,7 @@ export default function SearchBar({
           <div className="flex h-[45px] w-full border border-primary rounded-[5px] text-[13px] focus:outline-none hover:ring-1 hover:ring-primary">
             <input
               type="text"
-              className="grow focus:outline-none rounded-l-[5px] text-primary px-5 placeholder:text-base placeholder:font-light placeholder:text-primary placeholder:tracking-wider"
+              className="grow focus:outline-none rounded-l-[5px] text-base text-primary px-5 placeholder:text-base placeholder:font-light placeholder:text-primary placeholder:tracking-wider md:text-sm"
               placeholder="Search"
               onChange={(e) => setSearchTerm(e.target.value)}
               value={searchTerm}

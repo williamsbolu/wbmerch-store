@@ -73,6 +73,7 @@ export default function SideNavigation() {
           <li>
             <Link
               href="/admin"
+              target="_blank"
               className="flex items-center justify-center py-3 rounded-[5px] gap-3 hover:bg-[#1212120c] px-2 transition-all duration-150 hover:px-5 md:justify-start"
             >
               <MdOutlineAdminPanelSettings className="w-5 h-5 text-primary" />

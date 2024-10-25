@@ -134,7 +134,7 @@ export default function AddressForm({
   };
 
   const input =
-    "w-full border text-sm rounded-[5px] font-normal bg-white focus:outline-none placeholder:text-[#0000008F] placeholder:text-[13px] placeholder:tracking-wide py-[10px] px-3";
+    "w-full border text-base rounded-[5px] font-normal bg-white focus:outline-none placeholder:text-[#0000008F] placeholder:text-[13px] placeholder:tracking-wide py-[10px] px-3 md:text-sm";
 
   return (
     <form

@@ -75,13 +75,13 @@ export async function createProduct(formData: FormData) {
     `${Date.now().toString()}.jpg`
   );
   const buffer = await sharp(coverImageBuffer)
-    .resize(700, 700, {
+    .resize(550, 550, {
       fit: "contain",
       background: { r: 243, g: 243, b: 243 },
     })
     .flatten({ background: "#f3f3f3" })
     .toFormat("jpg")
-    .jpeg({ quality: 90 })
+    .jpeg({ quality: 80 })
     .toBuffer();
 
   const command = new PutObjectCommand({
@@ -107,13 +107,13 @@ export async function createProduct(formData: FormData) {
 
         // resize the image to the app specific size
         const buffer = await sharp(curBuffer)
-          .resize(700, 700, {
+          .resize(550, 550, {
             fit: "contain",
             background: { r: 243, g: 243, b: 243 },
           })
           .flatten({ background: "#f3f3f3" })
           .toFormat("jpg")
-          .jpeg({ quality: 90 })
+          .jpeg({ quality: 80 })
           .toBuffer();
 
         const command = new PutObjectCommand({

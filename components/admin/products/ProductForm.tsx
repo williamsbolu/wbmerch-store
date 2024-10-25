@@ -16,6 +16,12 @@ const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
+const MAX_FILE_SIZE = 1024 * 1024; // 1MB in bytes
+
+const validateFileSize = (file: File) => {
+  return file.size <= MAX_FILE_SIZE || "File size must be less than 1MB";
+};
+
 export default function ProductForm({
   onCloseModal,
   productToEdit,
@@ -124,7 +130,7 @@ export default function ProductForm({
   }
 
   const inputStyles =
-    "border border-solid border-gray-300 bg-white rounded-[5px] shadow-sm py-2 px-3 focus:outline-2 outline-indigo-600 disabled:bg-gray-200";
+    "border border-solid border-gray-300 bg-white rounded-[5px] text-base shadow-sm py-2 px-3 focus:outline-2 outline-indigo-600 disabled:bg-gray-200 md:text-sm";
 
   return (
     <form
@@ -277,6 +283,12 @@ export default function ProductForm({
           className="block w-full text-sm text-gray-700 rounded-[5px] file:mr-4 file:py-2 file:px-3 file:cursor-pointer file:rounded-[5px] file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 file:transition-all file:duration-200 hover:file:bg-indigo-100"
           {...register("coverImage", {
             required: isEditSession ? false : "This field is required",
+            validate: {
+              fileSize: (value: FileList) => {
+                if (!value || value.length === 0) return true;
+                return validateFileSize(value[0]);
+              },
+            },
           })}
           disabled={isPending}
         />
@@ -298,12 +310,22 @@ export default function ProductForm({
           multiple
           className="block w-full text-sm text-gray-700 rounded-[5px] file:mr-4 file:py-2 file:px-3 file:cursor-pointer file:rounded-[5px] file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 file:transition-all file:duration-200 hover:file:bg-indigo-100"
           {...register("images", {
-            validate: (value: FileList | undefined) => {
-              return (
-                !value ||
-                value.length <= 6 ||
-                "You can only select up to 6 images."
-              );
+            validate: {
+              maxFiles: (value: FileList | undefined) => {
+                return (
+                  !value ||
+                  value.length <= 2 ||
+                  "You can only select up to 2 images."
+                );
+              },
+              fileSize: (value: FileList | undefined) => {
+                if (!value || value.length === 0) return true;
+                for (let i = 0; i < value.length; i++) {
+                  const result = validateFileSize(value[i]);
+                  if (result !== true) return `Image ${i + 1}: ${result}`;
+                }
+                return true;
+              },
             },
           })}
           disabled={isPending}
