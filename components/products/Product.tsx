@@ -43,7 +43,7 @@ export default function Product({ product }: ProductProps) {
         >
           {product.name}
         </Link>
-        <p className="text-base tracking-wider">
+        <p className="text-[15px] tracking-wider">
           {getCurrencySymbol(currency)}
           {formatCurrency(price, currency === "NGN" ? 0 : 2)} {currency}
         </p>

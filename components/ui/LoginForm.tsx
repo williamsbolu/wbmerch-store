@@ -78,7 +78,6 @@ export default function LoginForm() {
               } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm sm:text-sm`}
               {...register("email")}
               disabled={isPending}
-              placeholder="Enter Email"
             />
             {errors?.email?.message && (
               <p className="text-sm text-[#EF4444]">{errors?.email?.message}</p>
@@ -106,7 +105,6 @@ export default function LoginForm() {
               } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm sm:text-sm`}
               {...register("password")}
               disabled={isPending}
-              placeholder="Enter Password"
             />
             {errors?.password?.message && (
               <p className="text-sm text-[#EF4444]">

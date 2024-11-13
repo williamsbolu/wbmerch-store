@@ -68,7 +68,6 @@ export default function SignUpForm() {
                   : "border-primary/40 focus:border-primary"
               } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm sm:text-sm`}
               {...register("name")}
-              placeholder="Enter Name"
               disabled={isPending}
             />
             {errors?.email?.message && (
@@ -88,7 +87,6 @@ export default function SignUpForm() {
                   : "border-primary/40 focus:border-primary"
               } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm sm:text-sm`}
               {...register("email")}
-              placeholder="Enter Email"
               disabled={isPending}
             />
             {errors?.email?.message && (
@@ -109,7 +107,6 @@ export default function SignUpForm() {
                   : "border-primary/40 focus:border-primary"
               } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm sm:text-sm`}
               {...register("password")}
-              placeholder="Enter Password"
               disabled={isPending}
             />
             {errors?.password?.message && (

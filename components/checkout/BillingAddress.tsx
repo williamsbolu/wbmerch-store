@@ -59,7 +59,7 @@ export default function BillingAddress({
     onHandleBillingAddress(data);
   }
   const input =
-    "w-full border text-base rounded-[5px] font-normal bg-white focus:outline-none placeholder:text-[#0000008F] placeholder:text-[13px] placeholder:tracking-wide py-[10px] px-3 text-sm";
+    "w-full border text-base rounded-[5px] font-normal bg-white focus:outline-none placeholder:text-[#0000008F] placeholder:text-[13px] placeholder:tracking-wide py-[10px] px-3 sm:text-sm";
 
   return (
     <div>
