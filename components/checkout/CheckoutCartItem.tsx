@@ -23,7 +23,7 @@ export default function CheckoutCartItem({
   return (
     <li className="flex gap-5 lg:gap-0">
       <div className="mr-auto flex gap-4">
-        <div className="relative w-16 h-16 border border-solid border-gray-300 rounded-md">
+        <div className="relative w-fit h-fit border border-solid border-gray-300 rounded-md">
           <Image
             src={coverImage}
             height={64}

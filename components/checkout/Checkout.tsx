@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Session } from "next-auth";
-import { Address } from "@prisma/client";
+import { Address, Settings } from "@prisma/client";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import AddressForm from "../ui/AddressForm";
 // import DeliveryMethod from "@/components/checkout/DeliveryMethod";
@@ -29,6 +29,7 @@ export default function Checkout({
   onHandleBillingAddressType,
   onHandleBillingAddress,
   onCheckout,
+  settings,
 }: {
   addresses: Address[];
   session: Session;
@@ -46,11 +47,12 @@ export default function Checkout({
   onHandleBillingAddressType: (type: "different" | "same") => void;
   onHandleBillingAddress: (data: OrderAddressType) => void;
   onCheckout: () => void;
+  settings: Settings;
 }) {
   const [open, setOpen] = useState(false);
 
   const input =
-    "w-full border border-gray-400 text-sm rounded-[5px] font-normal bg-white focus:outline-none focus:border-primary placeholder:text-[#0000008F] placeholder:text-[13px] placeholder:tracking-wide py-[10px] px-3";
+    "w-full border border-gray-400 text-base rounded-[5px] font-normal bg-white focus:outline-none focus:border-primary placeholder:text-[#0000008F] placeholder:text-[13px] placeholder:tracking-wide py-[10px] px-3 sm:text-sm";
 
   return (
     <div className="grid gap-6">
@@ -115,6 +117,7 @@ export default function Checkout({
       <ShippingMethod
         selectedShippingMethod={shippingMethod}
         onHandleShippingMethod={onHandleShippingMethod}
+        settings={settings}
       />
       <PaymentMethod
         selectedPaymentOption={paymentMethod}

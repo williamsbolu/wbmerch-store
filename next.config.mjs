@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // reactStrictMode: false,
+  reactStrictMode: false, // for the cart session to woek well in development mode
   // logging: {
   //   fetches: {
   //     fullUrl: true,

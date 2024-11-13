@@ -66,7 +66,7 @@ export default function SignUpForm() {
                 errors?.name?.message
                   ? "border-[#EF4444] focus:border-[#EF4444]"
                   : "border-primary/40 focus:border-primary"
-              } py-[10px] px-3 text-sm rounded-[4px] w-full focus:outline-none shadow-sm`}
+              } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm sm:text-sm`}
               {...register("name")}
               placeholder="Enter Name"
               disabled={isPending}
@@ -86,7 +86,7 @@ export default function SignUpForm() {
                 errors?.email?.message
                   ? "border-[#EF4444] focus:border-[#EF4444]"
                   : "border-primary/40 focus:border-primary"
-              } py-[10px] px-3 text-sm rounded-[4px] w-full focus:outline-none shadow-sm`}
+              } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm sm:text-sm`}
               {...register("email")}
               placeholder="Enter Email"
               disabled={isPending}
@@ -107,7 +107,7 @@ export default function SignUpForm() {
                 errors?.password?.message
                   ? "border-[#EF4444] focus:border-[#EF4444]"
                   : "border-primary/40 focus:border-primary"
-              } py-[10px] px-3 text-sm rounded-[4px] w-full focus:outline-none shadow-sm`}
+              } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm sm:text-sm`}
               {...register("password")}
               placeholder="Enter Password"
               disabled={isPending}

@@ -4,22 +4,24 @@ import { useState, useTransition } from "react";
 import { Session } from "next-auth";
 import toast from "react-hot-toast";
 import cookies from "js-cookie";
-import { Address } from "@prisma/client";
+import { Address, Settings } from "@prisma/client";
+import { initiatePayment } from "@/actions/order";
 import CheckoutCartTotals from "@/components/checkout/CheckoutCartTotals";
 import Checkout from "@/components/checkout/Checkout";
 import { OrderAddressType, CartItem } from "@/utils/types";
 import { formatCurrency, getCurrencySymbol } from "@/utils/helpers";
 import { useCurrency } from "@/context/CurrencyContext";
-import { initiatePayment } from "@/actions/order";
 
 export default function CheckoutOverviewWrapper({
   addresses,
   cartItems,
   session,
+  settings,
 }: {
   addresses: Address[];
   cartItems: CartItem[];
   session: Session;
+  settings: Settings;
 }) {
   const { currency, convertPrice, rates } = useCurrency();
   const [isPending, startTransition] = useTransition();
@@ -29,7 +31,9 @@ export default function CheckoutOverviewWrapper({
   );
   const emailIsValid = contactEmail.length > 0 && contactEmail.includes("@");
 
-  const [shippingFee, setShippingFee] = useState<number>(10);
+  const [shippingFee, setShippingFee] = useState<number>(
+    settings.standardShipping
+  );
 
   const [shippingMethod, setShippingMethod] = useState<"standard" | "express">(
     "standard"
@@ -72,7 +76,11 @@ export default function CheckoutOverviewWrapper({
 
   const handleShippingMethodChange = (method: "standard" | "express") => {
     setShippingMethod(method);
-    setShippingFee(method === "standard" ? 10 : 20);
+    setShippingFee(
+      method === "standard"
+        ? settings.standardShipping
+        : settings.expressShipping
+    );
   };
 
   const handlePaymentMethodChange = (
@@ -201,6 +209,7 @@ export default function CheckoutOverviewWrapper({
           onHandleBillingAddressType={handleBillingAddressType}
           onHandleBillingAddress={handleBillingAddress}
           onCheckout={handleCheckout}
+          settings={settings}
         />
       </div>
       <CheckoutCartTotals

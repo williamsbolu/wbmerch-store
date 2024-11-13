@@ -86,7 +86,7 @@ export default function CheckoutCartTotals({
           >
             <input
               type="text"
-              className="border border-gray-300 rounded-[5px] text-gray-600 bg-white text-sm font-normal placeholder:text-[#0000008F] placeholder:text-[13px] placeholder:tracking-wide focus:outline-none py-3 px-3"
+              className="border border-gray-300 rounded-[5px] text-gray-600 bg-white text-base font-normal placeholder:text-[#0000008F] placeholder:text-[13px] placeholder:tracking-wide focus:outline-none py-3 px-3 sm:text-sm"
               placeholder="Discount code or gift card"
             />
             <button className="bg-stone-300/40 text-sm capitalize text-stone-500 px-4 border border-solid rounded-[5px] border-gray-300">

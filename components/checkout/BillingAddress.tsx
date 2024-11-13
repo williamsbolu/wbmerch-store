@@ -59,7 +59,7 @@ export default function BillingAddress({
     onHandleBillingAddress(data);
   }
   const input =
-    "w-full border text-sm rounded-[5px] font-normal bg-white focus:outline-none placeholder:text-[#0000008F] placeholder:text-[13px] placeholder:tracking-wide py-[10px] px-3";
+    "w-full border text-base rounded-[5px] font-normal bg-white focus:outline-none placeholder:text-[#0000008F] placeholder:text-[13px] placeholder:tracking-wide py-[10px] px-3 text-sm";
 
   return (
     <div>
@@ -98,6 +98,7 @@ export default function BillingAddress({
             className="sr-only"
           />
         </label>
+
         <label
           className={`relative flex items-center justify-between h-[50px] px-4 border ${
             billingAddressType === "different"
@@ -133,7 +134,7 @@ export default function BillingAddress({
             billingAddressType === "different" ? "max-h-[420px]" : "max-h-0"
           }`}
         >
-          <div className="p-4 bg-stone-100/70 rounded-b-[5px] border border-solid border-gray-300 transition-all duration-300 ease-in-out">
+          <div className="px-3 py-4 bg-stone-100/70 rounded-b-[5px] border border-solid border-gray-300 transition-all duration-300 ease-in-out sm:px-4">
             <form
               onSubmit={handleSubmit(handleFormSubmit)}
               className="grid gap-3"

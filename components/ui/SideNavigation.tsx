@@ -27,7 +27,7 @@ const navLinks = [
     icon: <PiMapPin className="h-5 w-5 text-primary" />,
   },
   {
-    name: "Wishlist",
+    name: "My Wishlist",
     href: "/account/wishlist",
     icon: <PiHeart className="h-5 w-5 text-primary" />,
   },

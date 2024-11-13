@@ -51,7 +51,7 @@ export default function Page() {
               errors?.password?.message
                 ? "border-[#EF4444] focus:border-[#EF4444]"
                 : "border-primary/40 focus:border-primary"
-            } py-[10px] px-3 text-sm rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm`}
+            } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm sm:text-sm`}
             {...register("password")}
             disabled={isPending}
             placeholder="Current Password"
@@ -73,7 +73,7 @@ export default function Page() {
               errors?.newPassword?.message
                 ? "border-[#EF4444] focus:border-[#EF4444]"
                 : "border-primary/40 focus:border-primary"
-            } py-[10px] px-3 text-sm rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm`}
+            } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm sm:text-sm`}
             {...register("newPassword")}
             disabled={isPending}
             placeholder="New Password"

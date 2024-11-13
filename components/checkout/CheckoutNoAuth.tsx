@@ -9,8 +9,15 @@ import { getOrCreateCart } from "@/actions/cart";
 import CheckoutSkeleton from "@/components/checkout/CheckoutSkeleton";
 import CartEmpty from "@/components/cart/CartEmpty";
 import CheckoutOverviewWrapper from "@/components/checkout/CheckoutOverviewWrapper";
+import { Settings } from "@prisma/client";
 
-export default function CheckoutNoAuth({ session }: { session: Session }) {
+export default function CheckoutNoAuth({
+  session,
+  settings,
+}: {
+  session: Session;
+  settings: Settings;
+}) {
   const address = useSelector((state: any) => state.address.data);
   const [isPending, startTransition] = useTransition();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -35,6 +42,7 @@ export default function CheckoutNoAuth({ session }: { session: Session }) {
           addresses={address}
           cartItems={cartItems}
           session={session}
+          settings={settings}
         />
       )}
       {isPending && <CheckoutSkeleton />}

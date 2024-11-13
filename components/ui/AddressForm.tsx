@@ -141,7 +141,7 @@ export default function AddressForm({
       onSubmit={handleSubmit(handleFormSubmit)}
       className={`${inter.className} grid items-center ${
         type === "modal"
-          ? "p-5 pt-4 gap-4 w-[95vw] h-[80vh] overflow-y-auto sm:w-[600px] sm:h-fit"
+          ? "p-5 pt-4 gap-4 w-[95vw] h-[70vh] overflow-y-auto sm:w-[600px] sm:h-fit"
           : "gap-4 lg:gap-3"
       }`}
     >

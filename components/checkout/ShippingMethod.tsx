@@ -1,17 +1,19 @@
 import { useCurrency } from "@/context/CurrencyContext";
 import { formatCurrency, getCurrencySymbol } from "@/utils/helpers";
+import { Settings } from "@prisma/client";
 
 export default function ShippingMethod({
   selectedShippingMethod,
   onHandleShippingMethod,
+  settings,
 }: {
   selectedShippingMethod: "standard" | "express";
   onHandleShippingMethod: (method: "standard" | "express") => void;
+  settings: Settings;
 }) {
   const { currency, convertPrice } = useCurrency();
-
-  const convertedShipping = convertPrice(10);
-  const convertedExpressShipping = convertPrice(20);
+  const convertedShipping = convertPrice(settings.standardShipping);
+  const convertedExpressShipping = convertPrice(settings.expressShipping);
 
   return (
     <div className="mb-1">

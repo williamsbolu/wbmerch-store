@@ -60,7 +60,7 @@ export default function Page() {
               errors?.name?.message
                 ? "border-[#EF4444] focus:border-[#EF4444]"
                 : "border-primary/40 focus:border-primary"
-            } py-[10px] px-3 text-sm rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm`}
+            } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm sm:text-sm`}
             {...register("name")}
             disabled={isPending}
             placeholder="Enter Name"
@@ -73,7 +73,7 @@ export default function Page() {
           </label>
           <input
             type="text"
-            className="border border-solid border-primary/40 bg-[#EFEFEF4D] text-gray-600 focus:border-primary py-[10px] px-3 text-sm rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm disabled:cursor-not-allowed"
+            className="border border-solid border-primary/40 bg-[#EFEFEF4D] text-gray-600 focus:border-primary py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm disabled:cursor-not-allowed sm:text-sm"
             {...register("email")}
             disabled
           />
@@ -94,7 +94,7 @@ export default function Page() {
               errors?.phone?.message
                 ? "border-[#EF4444] focus:border-[#EF4444]"
                 : "border-primary/40 focus:border-primary"
-            } py-[10px] px-3 text-sm rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm`}
+            } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm sm:text-sm`}
             {...register("phone")}
             disabled={isPending}
             placeholder="Enter Tel No."
