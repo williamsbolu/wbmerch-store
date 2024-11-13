@@ -7,6 +7,7 @@ import { Settings } from "@prisma/client";
 
 export default async function CheckoutAuth({
   session,
+  settings,
 }: {
   session: Session;
   settings: Settings;
@@ -25,6 +26,7 @@ export default async function CheckoutAuth({
       addresses={userAddress}
       cartItems={userCartData.cartItems}
       session={session}
+      settings={settings}
     />
   );
 }
