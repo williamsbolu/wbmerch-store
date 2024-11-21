@@ -19,7 +19,7 @@ export default function SideBar({ sideBarOpen }: { sideBarOpen: boolean }) {
     <aside
       className={`${
         sideBarOpen ? "m-0" : "-ml-[220px]"
-      } row-span-full w-[220px] bg-white py-8 px-6 border-r border-gray-100 transition-all duration-300 ease-in-out flex flex-col gap-8`}
+      } row-span-full w-[220px] bg-white py-8 px-6 border-r border-gray-200 transition-all duration-300 ease-in-out flex flex-col gap-8`}
     >
       <div className="flex justify-center mt-10 mb-3">
         <Image src={logo} width={60} alt="wb-merch logo" />

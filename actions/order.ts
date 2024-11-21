@@ -7,6 +7,8 @@ import { db } from "@/lib/db";
 import { generateOrderId } from "@/utils/helpers";
 import { OrderData } from "@/utils/types";
 import { currentUser } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
+import { PaymentMethod, Status } from "@prisma/client";
 
 const flw = new flutterwave(
   process.env.FLW_PUBLIC_KEY!,
@@ -34,6 +36,7 @@ export async function initiatePayment(
       quantity: data.quantity,
       shippingFee: data.shippingFee,
       totalAmount: data.totalAmount,
+      rateToUsd: data.rateToUsd,
       shippingAddress: {
         firstName: data.shippingAddress.firstName,
         lastName: data.shippingAddress.lastName,
@@ -71,6 +74,8 @@ export async function initiatePayment(
       },
     },
   });
+
+  throw new Error("Failed to initiate payment");
 
   const customerEmail = user ? user.email : data.contactEmail;
   const customerName = user
@@ -214,15 +219,57 @@ export async function verifyTransaction(
   }
 }
 
-// And here's how you might query an order with its items and product details:
-// const orderWithDetails = await db.order.findUnique({
-//   where: { id: orderId },
-//   include: {
-//     items: {
-//       include: {
-//         product: true
-//       }
-//     },
-//     user: true
-//   }
-// })
+export async function confirmOrder(id: string, paymentMethod: PaymentMethod) {
+  // The logic here is that if the user used the pay_on_delivery method of payment, we confirm the isPaid on delivery: that is on the "confirmDelivery" method. not here on the
+  // confirm Order. We only confirm the isPaid here whenever flutterwave and bank transfer payment method is used.
+  const data = {
+    isPaid: true,
+    status: "confirmed" as Status,
+    confirmedAt: new Date(),
+  };
+
+  if (paymentMethod === "pay_on_delivery") {
+    data.isPaid = false;
+  }
+
+  const order = await db.order.update({
+    where: {
+      id,
+    },
+    data,
+  });
+
+  revalidatePath(`/admin/orders`);
+  revalidatePath(`/admin/orders/${order.orderId}`);
+}
+
+export async function confirmDelivery(id: string) {
+  const order = await db.order.update({
+    where: {
+      id,
+    },
+    data: {
+      isPaid: true,
+      status: "delivered",
+      deliveredAt: new Date(),
+    },
+  });
+
+  revalidatePath(`/admin/orders`);
+  revalidatePath(`/admin/orders/${order.orderId}`);
+}
+
+export async function cancelOrder(id: string) {
+  const order = await db.order.update({
+    where: {
+      id,
+    },
+    data: {
+      status: "cancelled",
+      cancelledAt: new Date(),
+    },
+  });
+
+  revalidatePath(`/admin/orders`);
+  revalidatePath(`/admin/orders/${order.orderId}`);
+}

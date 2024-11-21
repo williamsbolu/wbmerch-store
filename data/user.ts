@@ -43,3 +43,13 @@ export const getUserById = async (id: string) => {
     return null;
   }
 };
+
+export async function getAllUsersCount() {
+  try {
+    const count = await db.user.count();
+
+    return count;
+  } catch (err) {
+    throw new Error("Failed to get users count");
+  }
+}

@@ -23,3 +23,12 @@
 .admin::-webkit-scrollbar {
   display: none;
 }
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: #d1d5db;
+}
+
+.recharts-pie-label-text {
+  font-weight: 600;
+}

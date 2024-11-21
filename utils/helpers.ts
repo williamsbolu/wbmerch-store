@@ -43,6 +43,29 @@ export function getCurrencySymbol(currency: string) {
   return symbols[currency] || "";
 }
 
+export const convertAmountWithRate = (
+  rate: number,
+  amount: number,
+  currency: string
+) => {
+  const convertedRate = amount * rate;
+
+  const formattedValue = formatCurrency(
+    convertedRate,
+    currency === "NGN" ? 0 : 2
+  );
+
+  return formattedValue;
+};
+
+export const convertAmountToUsd = (rate: number, amount: number) => {
+  const convertedRate = amount / rate;
+
+  const formattedValue = formatCurrency(convertedRate, 2);
+
+  return formattedValue;
+};
+
 // for formating the size text for better ui in the application
 export function formatSizeText(sizeText: string) {
   if (sizeText === "xxl") {

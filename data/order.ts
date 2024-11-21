@@ -1,0 +1,176 @@
+import { db } from "@/lib/db";
+import { Status } from "@prisma/client";
+import { endOfDay, startOfDay, subDays } from "date-fns";
+import { notFound } from "next/navigation";
+
+export async function getAllOrders({
+  page,
+  sort,
+  status,
+}: {
+  page: number;
+  sort: string;
+  status: string;
+}) {
+  try {
+    const [field, order] = sort.split("-");
+    const orderBy = {
+      [field]: order.toLowerCase() === "desc" ? "desc" : "asc",
+    };
+
+    let where = {};
+
+    if (status !== "all") {
+      where = {
+        status: status as Status,
+      };
+    }
+
+    const count = await db.order.count({
+      where: where,
+    });
+    const orders = await db.order.findMany({
+      where: where,
+      orderBy,
+      skip: (page - 1) * 10,
+      take: 10,
+      select: {
+        id: true,
+        orderId: true,
+        quantity: true,
+        createdAt: true,
+        contactEmail: true,
+        status: true,
+        paymentMethod: true,
+        currency: true,
+        totalAmount: true,
+        deliveredAt: true,
+        cancelledAt: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return {
+      data: orders,
+      count,
+    };
+  } catch (err) {
+    console.log(err);
+    throw new Error("Failed to get orders");
+  }
+}
+
+export async function getOrderById(orderId: string) {
+  try {
+    const order = await db.order.findFirst({
+      where: {
+        orderId,
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+            phone: true,
+            image: true,
+          },
+        },
+        items: {
+          select: {
+            id: true,
+            quantity: true,
+            size: true,
+            price: true,
+            product: {
+              select: {
+                id: true,
+                name: true,
+                coverImage: true,
+                category: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!order) {
+      notFound();
+    }
+
+    return order;
+  } catch (err) {
+    console.log(err);
+    throw new Error("Failed to get order");
+  }
+}
+export async function getOrderWithinDays(days: number) {
+  const queryDate = subDays(new Date(), days);
+
+  try {
+    const orders = await db.order.findMany({
+      where: {
+        createdAt: {
+          gte: queryDate,
+        },
+      },
+      select: {
+        status: true,
+        currency: true,
+        rateToUsd: true,
+        totalAmount: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return orders;
+  } catch (err) {
+    throw new Error("Failed to get orders");
+  }
+}
+
+export async function getTodaysOrder() {
+  try {
+    const orders = await db.order.findMany({
+      where: {
+        status: { equals: "pending" },
+        createdAt: {
+          gte: startOfDay(new Date()),
+          lte: endOfDay(new Date()),
+        },
+      },
+      select: {
+        id: true,
+        orderId: true,
+        totalAmount: true,
+        currency: true,
+        items: {
+          select: {
+            product: {
+              select: {
+                name: true,
+                coverImage: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 4,
+    });
+
+    return orders;
+  } catch (err) {
+    throw new Error("Failed to get orders");
+  }
+}

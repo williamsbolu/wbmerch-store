@@ -77,15 +77,15 @@ export default function ProductRow({
 
   return (
     <div
-      className="grid grid-cols-[3fr_1.3fr_1.3fr_1.3fr_0.7fr_0.7fr_0.5fr] gap-6 items-center pl-3 pr-6 py-1 border-b border-solid border-gray-100 last:border-b-0"
+      className="grid grid-cols-[3fr_1.3fr_1.3fr_1.3fr_0.7fr_0.7fr_0.5fr] gap-6 items-center pl-3 pr-6 py-2 border-b border-solid border-gray-100 last:border-b-0"
       role="row"
     >
       <div className="flex gap-4 items-center">
         <Image
           src={product.coverImage}
           alt={product.name}
-          width={60}
-          height={60}
+          width={50}
+          height={50}
           className="rounded-md"
         />
         <h3 className="tracking-wide leading-5">{product.name}</h3>

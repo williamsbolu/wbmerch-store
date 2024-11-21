@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   const rates = await db.settings.findFirst({
     select: {
+      USD: true,
       NGN: true,
       CAD: true,
       EUR: true,
@@ -13,14 +14,7 @@ export async function GET(request: Request) {
     },
   });
 
-  return Response.json(
-    { data: rates },
-    {
-      headers: {
-        "Cache-Control": "no-store",
-      },
-    }
-  );
+  return Response.json({ data: rates });
 }
 
 // export async function GET(request: Request) {

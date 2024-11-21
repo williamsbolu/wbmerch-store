@@ -1,4 +1,10 @@
-import { PaymentMethod, ShippingMethod, Size } from "@prisma/client";
+import {
+  Category,
+  PaymentMethod,
+  ShippingMethod,
+  Size,
+  Status,
+} from "@prisma/client";
 
 export type Sizes = {
   s: number;
@@ -44,7 +50,7 @@ export type OrderAddressType = {
   city: string;
   postalCode: string;
   phone: string;
-  optional?: string;
+  optional?: string | null;
 };
 
 export type CartItem = {
@@ -116,6 +122,7 @@ export interface OrderData {
   quantity: number;
   shippingFee: string;
   totalAmount: string;
+  rateToUsd: number;
 }
 
 export interface OrderItem {
@@ -130,3 +137,76 @@ export interface OrderItem {
     slug: string;
   };
 }
+
+export type OrderListType = {
+  id: string;
+  orderId: string;
+  quantity: number;
+  createdAt: Date;
+  contactEmail: string | null;
+  currency: string;
+  status: Status;
+  paymentMethod: PaymentMethod;
+  totalAmount: string;
+  deliveredAt: Date | null;
+  cancelledAt: Date | null;
+  user: {
+    name: string | null;
+    email: string | null;
+  } | null;
+};
+
+export type OrderDetailType = {
+  id: string;
+  referenceId: string;
+  orderId: string;
+  contactEmail: string | null;
+  userId: string | null;
+  currency: string;
+  status: Status;
+  isPaid: boolean;
+  shippingMethod: ShippingMethod;
+  paymentMethod: PaymentMethod;
+  quantity: number;
+  shippingFee: string;
+  totalAmount: string;
+  rateToUsd: number;
+  shippingAddress: OrderAddressType;
+  billingAddress: OrderAddressType;
+  user: {
+    name: string | null;
+    email: string | null;
+    phone: string | null;
+    image: string | null;
+  } | null;
+  items: {
+    id: string;
+    quantity: number;
+    size: Size | null;
+    price: number;
+    product: {
+      id: string;
+      name: string;
+      coverImage: string;
+      category: Category;
+    };
+  }[];
+  createdAt: Date;
+  confirmedAt: Date | null;
+  deliveredAt: Date | null;
+  cancelledAt: Date | null;
+  updatedAt: Date;
+};
+
+export type TodaysOrderProp = {
+  id: string;
+  orderId: string;
+  totalAmount: string;
+  currency: string;
+  items: {
+    product: {
+      name: string;
+      coverImage: string;
+    };
+  }[];
+};

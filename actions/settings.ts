@@ -59,7 +59,7 @@ export async function getLiveUpdates(id: string) {
   const filteredRates = Object.entries(exchanges.conversion_rates)
     .filter(([currency]) => targetCurrencies.includes(currency))
     .reduce<Record<string, number>>((acc, [currency, rate]) => {
-      acc[currency] = Number(rate.toFixed(2));
+      acc[currency] = Number(rate.toFixed(currency === "NGN" ? 2 : 4));
       return acc;
     }, {});
 

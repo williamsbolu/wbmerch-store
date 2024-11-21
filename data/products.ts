@@ -46,7 +46,6 @@ export async function getAllProducts({
     };
   } catch (error) {
     console.log(error);
-
     throw new Error("Failed to get products");
   }
 }

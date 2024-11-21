@@ -87,7 +87,7 @@ export default function ProductDetail({
       addOrUpdateCart({
         sessionId,
         productId: id,
-        quantity: 1,
+        quantity: quantity,
         size: sizes ? selectedSize : null,
       })
         .then((data) => {

@@ -200,9 +200,10 @@ model Address {
 }
 
 enum Status {
-  unconfirmed
+  pending
   confirmed
   delivered
+  cancelled
 }
 
 enum ShippingMethod {
@@ -246,17 +247,22 @@ model Order {
   userId          String?        @db.ObjectId
   items           OrderItem[]
   currency        String         @default("NGN")
-  status          Status         @default(unconfirmed)
+  status          Status         @default(pending)
   isPaid          Boolean        @default(false)
   shippingMethod  ShippingMethod
   paymentMethod   PaymentMethod
   quantity        Int
-  shippingFee     String
+  shippingFee     String // i can also store te shipping and total amount as number also
   totalAmount     String
+  rateToUsd       Float // used to determine the rate at the time of purchased
   shippingAddress OrderAddress
   billingAddress  OrderAddress
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+
+  createdAt   DateTime  @default(now())
+  confirmedAt DateTime?
+  deliveredAt DateTime?
+  cancelledAt DateTime?
+  updatedAt   DateTime  @updatedAt
 
   user User? @relation(fields: [userId], references: [id])
 }
@@ -287,4 +293,5 @@ model Settings {
   CAD Float
   GHS Float
   EUR Float
+  USD Int
 }

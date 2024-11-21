@@ -13,7 +13,7 @@ export default function Header({
   onToggleSidebar: () => void;
 }) {
   return (
-    <header className="bg-white py-4 px-6 border-b border-gray-100 flex gap-6 items-center justify-end">
+    <header className="bg-white py-4 px-6 border-b border-gray-200 flex gap-6 items-center justify-end">
       <div className="mr-auto">
         <ButtonIcon type="button" onClick={onToggleSidebar}>
           <SlMenu className="w-5 h-5 text-indigo-600" />

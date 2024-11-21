@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function ProductTag({ stock }: { stock: number }) {
   if (stock === 0) {
     return (

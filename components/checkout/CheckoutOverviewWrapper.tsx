@@ -107,10 +107,6 @@ export default function CheckoutOverviewWrapper({
   };
 
   async function handleCheckout() {
-    // console.log({ billingAddressType });
-    // console.log({ shippingAddress });
-    // console.log({ billingAddress: selectedBillingAddress });
-
     if (!emailIsValid) {
       toast.error("Pls add a valid contact email");
       return;
@@ -138,6 +134,10 @@ export default function CheckoutOverviewWrapper({
       currency === "NGN" ? 0 : 2
     );
 
+    console.log({ shippingFee, total: caculateTotal() });
+
+    // return;
+
     const data = {
       ...(contactEmail && { contactEmail }),
       ...(session?.user?.id && { userId: session.user.id }),
@@ -150,6 +150,7 @@ export default function CheckoutOverviewWrapper({
       quantity: totalQuantity,
       shippingFee: shippingAmount,
       totalAmount: totalAmount,
+      rateToUsd: rates[currency],
     };
 
     if (paymentMethod === "pay_on_delivery") {
