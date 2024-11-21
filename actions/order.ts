@@ -75,8 +75,6 @@ export async function initiatePayment(
     },
   });
 
-  throw new Error("Failed to initiate payment");
-
   const customerEmail = user ? user.email : data.contactEmail;
   const customerName = user
     ? user.name
