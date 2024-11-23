@@ -57,12 +57,12 @@ export default function OrderItem({ order }: { order: OrderItemProp }) {
         </div>
       </div>
 
-      <div className="self-stretch justify-items-end">
+      <div className="self-stretch flex justify-end items-start">
         <Link
           href={`/account/orders/${order.orderId}`}
-          className="text-red-500 flex gap-2 items-center py-[5px] px-2 rounded-[3px] hover:bg-red-100 transition-all duration-150"
+          className="text-red-500 gap-2 items-center py-[5px] px-2 uppercase text-[13px] font-medium rounded-[3px] hover:bg-red-100 transition-all duration-150 inline-block"
         >
-          <span className="uppercase text-[13px] font-medium">See Details</span>
+          See Details
         </Link>
       </div>
     </li>

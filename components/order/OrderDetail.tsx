@@ -49,7 +49,7 @@ export default function OrderDetail({
           <h2 className="text-xl py-2">Order Details</h2>
         </div>
 
-        <div className="text-sm text-gray-600 pt-4 flex justify-between items-center">
+        <div className="text-sm text-gray-600 pt-4 flex flex-col justify-between items-center md:flex-row">
           <h2 className="text-base text-primary mb-[6px] font-medium tracking-wider">
             {orderId}
           </h2>
@@ -58,7 +58,7 @@ export default function OrderDetail({
             Estimated delivery: {format(new Date(deliveryDate), "MMM dd, yyyy")}
           </p>
         </div>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 mt-3 text-center md:text-left md:mt-0">
           Order date:{" "}
           <span className="text-gray-700">
             {isToday(new Date(createdAt))
