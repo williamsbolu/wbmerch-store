@@ -15,7 +15,7 @@ export default function Socials() {
   };
 
   return (
-    <div className="grid gap-2">
+    <div className="grid gap-[10px]">
       <Button
         href="/register"
         type="button"
