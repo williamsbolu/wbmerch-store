@@ -47,7 +47,8 @@ export const login = async (
 
     await sendVerificationEmail(
       verificationToken.email,
-      verificationToken.token
+      verificationToken.token,
+      existingUser.name?.split(" ")[0]!
     );
 
     return { success: "Confirmation email sent!" };
@@ -125,7 +126,8 @@ export const reset = async (values: z.infer<typeof ResetSchema>) => {
 
   await sendPasswordResetEmail(
     passwordResetToken.email,
-    passwordResetToken.token
+    passwordResetToken.token,
+    existingUser.name?.split(" ")[0]!
   );
 
   return { success: "Password reset link sent!" };
