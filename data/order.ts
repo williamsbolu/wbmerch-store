@@ -1,3 +1,4 @@
+import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Status } from "@prisma/client";
 import { endOfDay, startOfDay, subDays } from "date-fns";
@@ -170,6 +171,75 @@ export async function getTodaysOrder() {
     });
 
     return orders;
+  } catch (err) {
+    throw new Error("Failed to get orders");
+  }
+}
+
+export async function getOrdersByStatus({
+  page,
+  status,
+}: {
+  page: number;
+  status: string;
+}) {
+  const user = await currentUser();
+
+  if (!user) throw new Error("Unauthorized");
+
+  try {
+    let where = {};
+    if (status) {
+      switch (status) {
+        case "ongoing-delivered":
+          where = {
+            status: { in: ["pending", "confirmed", "delivered"] },
+          };
+          break;
+        case "cancelled":
+          where = {
+            status: "cancelled",
+          };
+          break;
+        default:
+          where = {
+            status: "pending",
+          };
+      }
+    }
+
+    const count = await db.order.count({
+      where: { ...where, userId: user.id },
+    });
+    const orders = await db.order.findMany({
+      where: { ...where, userId: user.id },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 10,
+      skip: (page - 1) * 10,
+      select: {
+        orderId: true,
+        status: true,
+        createdAt: true,
+        items: {
+          select: {
+            size: true,
+            product: {
+              select: {
+                name: true,
+                coverImage: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return {
+      data: orders,
+      count,
+    };
   } catch (err) {
     throw new Error("Failed to get orders");
   }

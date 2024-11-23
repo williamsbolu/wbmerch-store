@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useTransition } from "react";
 import { Sono } from "next/font/google";
 import { FcCancel } from "react-icons/fc";

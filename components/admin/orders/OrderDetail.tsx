@@ -277,10 +277,14 @@ export default function OrderDetail({
               <h2 className="font-medium text-base">Payment details</h2>
             </div>
             <div className="py-4 px-5 space-y-2 text-sm">
-              <p className="text-gray-500">
-                Reference ID:
-                <span className="text-gray-700 ml-[10px]">#{referenceId}</span>
-              </p>
+              {referenceId && (
+                <p className="text-gray-500">
+                  Reference ID:
+                  <span className="text-gray-700 ml-[10px]">
+                    #{referenceId}
+                  </span>
+                </p>
+              )}
               <p className="text-gray-500">
                 Currency:
                 <span className="text-gray-700 ml-[10px] tracking-wide capitalize">

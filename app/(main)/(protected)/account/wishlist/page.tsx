@@ -15,7 +15,7 @@ export default async function Page({
         My Wishlist
       </h1>
 
-      <Suspense fallback={<WishlistSpinner />}>
+      <Suspense key={page} fallback={<WishlistSpinner />}>
         <UsersWishlist page={page} />
       </Suspense>
     </div>

@@ -91,7 +91,6 @@ export default function CurrencyChart({ orders }: { orders: OrderProp[] }) {
             verticalAlign="middle"
             align="right"
             width={100}
-            // width={"30%"}
             layout="vertical"
             iconSize={15}
             iconType="circle"

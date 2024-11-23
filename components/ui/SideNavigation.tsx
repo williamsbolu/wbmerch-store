@@ -12,14 +12,14 @@ import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 const navLinks = [
   {
-    name: "Order History",
+    name: "Personal Info",
     href: "/account",
-    icon: <SlBag className="h-5 w-5 text-primary" />,
+    icon: <PiUserList className="h-5 w-5 text-primary" />,
   },
   {
-    name: "Personal Info",
-    href: "/account/information",
-    icon: <PiUserList className="h-5 w-5 text-primary" />,
+    name: "My Orders",
+    href: "/account/orders",
+    icon: <SlBag className="h-5 w-5 text-primary" />,
   },
   {
     name: "My Address",
