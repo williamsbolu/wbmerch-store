@@ -21,6 +21,7 @@ export default function OrderDetail({
   order: {
     id,
     referenceId,
+    transactionId,
     orderId,
     contactEmail,
     items,
@@ -63,11 +64,18 @@ export default function OrderDetail({
 
   const confirmUserOrder = () => {
     startTransition(() => {
-      confirmOrder(id, paymentMethod)
-        .then(() => {
-          toast.success("Order confirmed successfully", {
-            position: "top-center",
-          });
+      confirmOrder(id, paymentMethod, referenceId)
+        .then((data) => {
+          if (data.success) {
+            toast.success(data.success, {
+              position: "top-center",
+            });
+          }
+          if (data.error) {
+            toast.error(data.error, {
+              position: "top-center",
+            });
+          }
         })
         .catch((err) => {
           toast.error("Failed to confirm user order", {
@@ -282,6 +290,14 @@ export default function OrderDetail({
                   Reference ID:
                   <span className="text-gray-700 ml-[10px]">
                     #{referenceId}
+                  </span>
+                </p>
+              )}
+              {transactionId && (
+                <p className="text-gray-500">
+                  Transaction ID:
+                  <span className="text-gray-700 ml-[10px]">
+                    #{transactionId}
                   </span>
                 </p>
               )}

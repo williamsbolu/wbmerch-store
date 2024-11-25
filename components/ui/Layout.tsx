@@ -12,11 +12,15 @@ import WhatsAppButton from "@/components/ui/WhatsAppButton";
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathName = usePathname();
 
-  const showFooter =
+  const showWhatsAppButton =
     pathName !== "/checkout" &&
     !pathName.startsWith("/account") &&
     !pathName.startsWith("/cart") &&
-    !pathName.startsWith("/payment-confirmation");
+    !pathName.startsWith("/payment-confirmation") &&
+    !pathName.startsWith("/orders/thankyou");
+
+  const showFooter =
+    pathName !== "/checkout" && !pathName.startsWith("/account");
 
   return (
     <div
@@ -25,13 +29,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {pathName !== "/checkout" && <Header />}
       <main
         className={`text-primary overflow-x-hidden ${
-          showFooter ? "mt-[90px]" : ""
+          showWhatsAppButton ? "mt-[90px]" : ""
         }`}
       >
         {children}
       </main>
       {showFooter && <Footer />}
-      {showFooter && <WhatsAppButton />}
+      {showWhatsAppButton && <WhatsAppButton />}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { Settings } from "@prisma/client";
 import { Session } from "next-auth";
 import { useSelector } from "react-redux";
 import cookies from "js-cookie";
@@ -9,7 +10,6 @@ import { getOrCreateCart } from "@/actions/cart";
 import CheckoutSkeleton from "@/components/checkout/CheckoutSkeleton";
 import CartEmpty from "@/components/cart/CartEmpty";
 import CheckoutOverviewWrapper from "@/components/checkout/CheckoutOverviewWrapper";
-import { Settings } from "@prisma/client";
 
 export default function CheckoutNoAuth({
   session,

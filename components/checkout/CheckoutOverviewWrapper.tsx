@@ -5,7 +5,7 @@ import { Session } from "next-auth";
 import toast from "react-hot-toast";
 import cookies from "js-cookie";
 import { Address, Settings } from "@prisma/client";
-import { initiatePayment } from "@/actions/order";
+import { createOrder, initiatePayment } from "@/actions/order";
 import CheckoutCartTotals from "@/components/checkout/CheckoutCartTotals";
 import Checkout from "@/components/checkout/Checkout";
 import { OrderAddressType, CartItem } from "@/utils/types";
@@ -154,7 +154,15 @@ export default function CheckoutOverviewWrapper({
     };
 
     if (paymentMethod === "pay_on_delivery") {
-      toast.error("This payment method is not available");
+      const sessionId = cookies.get("sessionId");
+
+      startTransition(() => {
+        createOrder(data, sessionId)
+          .then(() => {
+            toast.success("Order successful");
+          })
+          .catch((err) => toast.error("Failed to process order"));
+      });
     }
 
     if (paymentMethod === "card") {

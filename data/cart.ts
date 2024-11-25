@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { Size } from "@prisma/client";
+import { User } from "next-auth";
 
 export async function addToCart(
   userId: string | undefined,
@@ -31,6 +32,21 @@ export async function addToCart(
         size,
         quantity,
       },
+    });
+  }
+}
+
+export async function clearUsersCart(
+  user: User,
+  sessionId: string | undefined
+) {
+  if (user) {
+    await db.cart.deleteMany({
+      where: { userId: user.id },
+    });
+  } else {
+    await db.cart.deleteMany({
+      where: { sessionId },
     });
   }
 }

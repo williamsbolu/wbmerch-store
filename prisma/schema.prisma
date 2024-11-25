@@ -241,7 +241,8 @@ type OrderAddress {
 
 model Order {
   id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  referenceId     String         @unique
+  referenceId     String?        @unique
+  transactionId   String?
   orderId         String         @unique
   contactEmail    String?
   userId          String?        @db.ObjectId

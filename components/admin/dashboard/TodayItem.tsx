@@ -33,9 +33,11 @@ export default function TodayItem({ order }: { order: TodaysOrderProp }) {
         <div className="">
           <h3 className="text-[13px] mt-1">
             {order.items[0].product.name}{" "}
-            <span className="text-gray-500 text-xs">
-              +{order.items.length - 1}
-            </span>
+            {order.items.length > 1 && (
+              <span className="text-gray-500 text-xs">
+                +{order.items.length - 1}
+              </span>
+            )}
           </h3>
         </div>
       </div>

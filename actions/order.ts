@@ -9,6 +9,8 @@ import { OrderData } from "@/utils/types";
 import { currentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { PaymentMethod, Status } from "@prisma/client";
+import { clearUsersCart } from "@/data/cart";
+import { redirect } from "next/navigation";
 
 const flw = new flutterwave(
   process.env.FLW_PUBLIC_KEY!,
@@ -106,15 +108,7 @@ export async function initiatePayment(
   );
 
   // Delete the users cart based on the sessionId or the userId
-  if (user) {
-    await db.cart.deleteMany({
-      where: { userId: user.id },
-    });
-  } else {
-    await db.cart.deleteMany({
-      where: { sessionId },
-    });
-  }
+  await clearUsersCart(user!, sessionId);
 
   return response.data;
 }
@@ -146,7 +140,7 @@ export async function verifyTransaction(
       id: transactionId,
     });
 
-    console.log({ verifyResponse: response });
+    // console.log({ verifyResponse: response });
 
     if (
       response.data.status === "successful" &&
@@ -160,6 +154,7 @@ export async function verifyTransaction(
         },
         data: {
           isPaid: true,
+          transactionId: transactionId,
         },
         include: {
           items: {
@@ -217,17 +212,110 @@ export async function verifyTransaction(
   }
 }
 
-export async function confirmOrder(id: string, paymentMethod: PaymentMethod) {
+export async function createOrder(
+  data: OrderData,
+  sessionId: string | undefined
+) {
+  const user = await currentUser();
+  const orderId = generateOrderId();
+
+  await db.order.create({
+    data: {
+      orderId: orderId,
+      ...(data.contactEmail && { contactEmail: data.contactEmail }),
+      ...(data.userId && { userId: data.userId }),
+      currency: data.currency,
+      shippingMethod: data.shippingMethod,
+      paymentMethod: data.paymentMethod,
+      quantity: data.quantity,
+      shippingFee: data.shippingFee,
+      totalAmount: data.totalAmount,
+      rateToUsd: data.rateToUsd,
+      shippingAddress: {
+        firstName: data.shippingAddress.firstName,
+        lastName: data.shippingAddress.lastName,
+        address: data.shippingAddress.address,
+        ...(data.shippingAddress.optional && {
+          optional: data.shippingAddress.optional,
+        }),
+        country: data.shippingAddress.country,
+        state: data.shippingAddress.state,
+        city: data.shippingAddress.city,
+        postalCode: data.shippingAddress.postalCode,
+        phone: data.shippingAddress.phone,
+      },
+      billingAddress: {
+        firstName: data.billingAddress.firstName,
+        lastName: data.billingAddress.lastName,
+        address: data.billingAddress.address,
+        ...(data.billingAddress.optional && {
+          optional: data.billingAddress.optional,
+        }),
+        country: data.billingAddress.country,
+        state: data.billingAddress.state,
+        city: data.billingAddress.city,
+        postalCode: data.billingAddress.postalCode,
+        phone: data.billingAddress.phone,
+      },
+      // Create the orderItems
+      items: {
+        create: data.items.map((item) => ({
+          product: { connect: { id: item.productId } },
+          quantity: item.quantity,
+          size: item.size,
+          price: item.product.price,
+        })),
+      },
+    },
+  });
+
+  // Delete the users cart based on the sessionId or the userId
+  await clearUsersCart(user!, sessionId);
+
+  redirect("/orders/thankyou");
+}
+
+export async function confirmOrder(
+  id: string,
+  paymentMethod: PaymentMethod,
+  referenceId: string
+) {
   // The logic here is that if the user used the pay_on_delivery method of payment, we confirm the isPaid on delivery: that is on the "confirmDelivery" method. not here on the
   // confirm Order. We only confirm the isPaid here whenever flutterwave and bank transfer payment method is used.
   const data = {
-    isPaid: true,
+    isPaid: false,
     status: "confirmed" as Status,
     confirmedAt: new Date(),
   };
 
   if (paymentMethod === "pay_on_delivery") {
     data.isPaid = false;
+  }
+
+  if (paymentMethod === "bank_transfer") {
+    data.isPaid = true;
+  }
+
+  // Prevents confirming uppaid orders of customers that made use of the card payment method
+  if (paymentMethod === "card") {
+    try {
+      const response = await axios.get(
+        `https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=${referenceId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
+          },
+        }
+      );
+
+      if (response.data.data.status === "successful") {
+        data.isPaid = true;
+      }
+    } catch (err) {
+      return {
+        error: "User's payment hasn't been verified. Please check back later",
+      };
+    }
   }
 
   const order = await db.order.update({
@@ -237,8 +325,11 @@ export async function confirmOrder(id: string, paymentMethod: PaymentMethod) {
     data,
   });
 
+  // TODO: Send confirmation email to the customer
+
   revalidatePath(`/admin/orders`);
   revalidatePath(`/admin/orders/${order.orderId}`);
+  return { success: "Order confirmed successfully" };
 }
 
 export async function confirmDelivery(id: string) {

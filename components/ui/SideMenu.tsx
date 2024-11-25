@@ -100,7 +100,7 @@ export default function SideMenu({
           {user && (
             <li className="flex items-center gap-4 border-b border-primary border-solid py-3 px-[10px]">
               <Link
-                href="/account"
+                href="/account/orders"
                 onClick={onCloseModal}
                 className="flex items-center gap-3"
               >

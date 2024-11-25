@@ -54,16 +54,16 @@ export default function Header() {
   }, [lastScrollY]);
 
   useEffect(() => {
-    let sessionId = cookies.get("sessionId");
+    let existingSession = cookies.get("sessionId");
 
-    getOrCreateCart({ userId: user?.id, sessionId })
+    getOrCreateCart({ userId: user?.id, sessionId: existingSession })
       .then((data) => {
         if (user?.id) {
-          if (sessionId) {
+          if (existingSession) {
             cookies.remove("sessionId");
           }
         } else {
-          if (!sessionId) {
+          if (!existingSession && data.sessionId) {
             cookies.set("sessionId", data.sessionId!);
           }
         }

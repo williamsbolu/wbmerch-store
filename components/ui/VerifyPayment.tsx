@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import { Session } from "next-auth";
 import PaymentSuccess from "@/components/ui/PaymentSuccess";
 import PaymentFailed from "@/components/ui/PaymentFailed";
@@ -25,8 +25,6 @@ export default function VerifyPayment({
   useEffect(() => {
     verifyTransaction(transactionRef!, transactionId!)
       .then((data) => {
-        console.log(data);
-
         setIsLoading(false);
         if (data?.success) {
           setSuccess(data.success);
