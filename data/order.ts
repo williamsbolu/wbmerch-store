@@ -37,6 +37,7 @@ export async function getAllOrders({
       take: 10,
       select: {
         id: true,
+        referenceId: true,
         orderId: true,
         quantity: true,
         createdAt: true,

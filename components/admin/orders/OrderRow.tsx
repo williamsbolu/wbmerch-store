@@ -29,6 +29,7 @@ export default function OrderRow({
   order: {
     id,
     contactEmail: customerEmail,
+    referenceId,
     orderId,
     quantity,
     status,
@@ -62,7 +63,7 @@ export default function OrderRow({
 
   const confirmUserOrder = () => {
     startTransition(() => {
-      confirmOrder(id, paymentMethod)
+      confirmOrder(id, paymentMethod, referenceId)
         .then(() => {
           toast.success(`${orderId} confirmed successfully`, {
             position: "top-center",

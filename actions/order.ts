@@ -278,7 +278,7 @@ export async function createOrder(
 export async function confirmOrder(
   id: string,
   paymentMethod: PaymentMethod,
-  referenceId: string
+  referenceId: string | null
 ) {
   // The logic here is that if the user used the pay_on_delivery method of payment, we confirm the isPaid on delivery: that is on the "confirmDelivery" method. not here on the
   // confirm Order. We only confirm the isPaid here whenever flutterwave and bank transfer payment method is used.
@@ -296,7 +296,7 @@ export async function confirmOrder(
     data.isPaid = true;
   }
 
-  // Prevents confirming uppaid orders of customers that made use of the card payment method
+  // Prevents confirming uppaid orders of customers that made use of the card payment method (referenceId would be available on card purchase)
   if (paymentMethod === "card") {
     try {
       const response = await axios.get(

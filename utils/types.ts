@@ -140,6 +140,7 @@ export interface OrderItem {
 
 export type OrderListType = {
   id: string;
+  referenceId: string | null;
   orderId: string;
   quantity: number;
   createdAt: Date;
