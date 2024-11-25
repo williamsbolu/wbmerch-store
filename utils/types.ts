@@ -158,7 +158,7 @@ export type OrderListType = {
 
 export type OrderDetailType = {
   id: string;
-  referenceId: string;
+  referenceId: string | null;
   transactionId?: string | null;
   orderId: string;
   contactEmail: string | null;
