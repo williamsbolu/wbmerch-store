@@ -13,163 +13,173 @@ export async function getOrCreateCart({
   userId?: string | undefined;
   sessionId?: string | undefined;
 }) {
-  if (userId) {
-    // For authenticated users
-    let cart = await db.cart.findFirst({
-      where: {
-        userId: userId,
-      },
-      include: {
-        items: {
+  return await db.$transaction(
+    async (prisma) => {
+      if (userId) {
+        // For authenticated users
+        let cart = await prisma.cart.findFirst({
           where: {
-            product: {
-              isActive: true, // only get active products
-            },
+            userId: userId,
           },
-          select: {
-            id: true,
-            cartId: true,
-            productId: true,
-            size: true,
-            quantity: true,
-            product: {
-              select: {
-                name: true,
-                coverImage: true,
-                price: true,
-                sizes: true,
-                stock: true,
-                slug: true,
+          include: {
+            items: {
+              where: {
+                product: {
+                  isActive: true, // only get active products
+                },
               },
-            },
-          },
-        },
-      },
-    });
-
-    if (!cart) {
-      // If authenticated user doesn't have a cart, create one
-      cart = await db.cart.create({
-        data: { userId },
-        include: {
-          items: {
-            select: {
-              id: true,
-              cartId: true,
-              productId: true,
-              size: true,
-              quantity: true,
-              product: {
-                select: {
-                  name: true,
-                  coverImage: true,
-                  price: true,
-                  sizes: true,
-                  stock: true,
-                  slug: true,
+              select: {
+                id: true,
+                cartId: true,
+                productId: true,
+                size: true,
+                quantity: true,
+                product: {
+                  select: {
+                    name: true,
+                    coverImage: true,
+                    price: true,
+                    sizes: true,
+                    stock: true,
+                    slug: true,
+                  },
                 },
               },
             },
           },
-        },
-      });
-    }
+        });
 
-    // If there was a session cart, merge it with the user's cart
-    if (sessionId) {
-      const sessionCart = await db.cart.findFirst({
-        where: { sessionId },
-        include: { items: true },
-      });
+        if (!cart) {
+          // If authenticated user doesn't have a cart, create one
+          cart = await prisma.cart.create({
+            data: { userId },
+            include: {
+              items: {
+                select: {
+                  id: true,
+                  cartId: true,
+                  productId: true,
+                  size: true,
+                  quantity: true,
+                  product: {
+                    select: {
+                      name: true,
+                      coverImage: true,
+                      price: true,
+                      sizes: true,
+                      stock: true,
+                      slug: true,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        }
 
-      // if there is a cart for this session id in the database, we add those cart to the userId cart session
-      if (sessionCart) {
-        if (sessionCart.items.length > 0) {
-          for (const item of sessionCart.items) {
-            await addToCart(
-              userId,
-              item.productId,
-              item?.size || null, // null is required because of camparison
-              item.quantity
-            );
+        // If there was a session cart, merge it with the user's cart
+        if (sessionId) {
+          const sessionCart = await prisma.cart.findFirst({
+            where: { sessionId },
+            include: { items: true },
+          });
+
+          // if there is a cart for this session id in the database, we add those cart to the userId cart session
+          if (sessionCart) {
+            if (sessionCart.items.length > 0) {
+              for (const item of sessionCart.items) {
+                await addToCart(
+                  userId,
+                  item.productId,
+                  item?.size || null, // null is required because of camparison
+                  item.quantity
+                );
+              }
+            }
+
+            // delete the session cart
+            await prisma.cart.delete({ where: { id: sessionCart.id } });
+
+            // delete all previous session cart items (had to implement this because cascade don't work on mongoprisma)
+            await prisma.cartItem.deleteMany({
+              where: { cartId: sessionCart.id },
+            });
           }
         }
 
-        // delete the session cart
-        await db.cart.delete({ where: { id: sessionCart.id } });
+        return { cart, cartItems: cart.items };
+      } else {
+        // For unauthenticated users
+        if (!sessionId) {
+          sessionId = uuidv4();
+        }
 
-        // delete all previous session cart items (had to implement this because cascade don't work on mongodb)
-        await db.cartItem.deleteMany({ where: { cartId: sessionCart.id } });
-      }
-    }
-
-    return { cart, cartItems: cart.items };
-  } else {
-    // For unauthenticated users
-    if (!sessionId) {
-      sessionId = uuidv4();
-    }
-
-    // in case there is a sessionId
-    let cart = await db.cart.findFirst({
-      where: { sessionId },
-      include: {
-        items: {
-          where: {
-            product: {
-              isActive: true, // only get active products
-            },
-          },
-          select: {
-            id: true,
-            cartId: true,
-            productId: true,
-            size: true,
-            quantity: true,
-            product: {
-              select: {
-                name: true,
-                coverImage: true,
-                price: true,
-                sizes: true,
-                stock: true,
-                slug: true,
+        // in case there is a sessionId
+        let cart = await prisma.cart.findFirst({
+          where: { sessionId },
+          include: {
+            items: {
+              where: {
+                product: {
+                  isActive: true, // only get active products
+                },
               },
-            },
-          },
-        },
-      },
-    });
-
-    if (!cart) {
-      cart = await db.cart.create({
-        data: { sessionId },
-        include: {
-          items: {
-            select: {
-              id: true,
-              cartId: true,
-              productId: true,
-              size: true,
-              quantity: true,
-              product: {
-                select: {
-                  name: true,
-                  coverImage: true,
-                  price: true,
-                  sizes: true,
-                  stock: true,
-                  slug: true,
+              select: {
+                id: true,
+                cartId: true,
+                productId: true,
+                size: true,
+                quantity: true,
+                product: {
+                  select: {
+                    name: true,
+                    coverImage: true,
+                    price: true,
+                    sizes: true,
+                    stock: true,
+                    slug: true,
+                  },
                 },
               },
             },
           },
-        },
-      });
-    }
+        });
 
-    return { cart, cartItems: cart.items, sessionId };
-  }
+        if (!cart) {
+          cart = await prisma.cart.create({
+            data: { sessionId },
+            include: {
+              items: {
+                select: {
+                  id: true,
+                  cartId: true,
+                  productId: true,
+                  size: true,
+                  quantity: true,
+                  product: {
+                    select: {
+                      name: true,
+                      coverImage: true,
+                      price: true,
+                      sizes: true,
+                      stock: true,
+                      slug: true,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        return { cart, cartItems: cart.items, sessionId };
+      }
+    },
+    {
+      maxWait: 5000, // default: 2000
+      timeout: 15000, // default: 5000
+    }
+  );
 }
 
 interface addToCartProps {

@@ -56,8 +56,18 @@ export default function Header() {
   useEffect(() => {
     let existingSession = cookies.get("sessionId");
 
-    getOrCreateCart({ userId: user?.id, sessionId: existingSession })
-      .then((data) => {
+    const fetchCart = async () => {
+      try {
+        // Add a small random delay to help prevent concurrent calls
+        await new Promise((resolve) =>
+          setTimeout(resolve, Math.random() * 200)
+        );
+
+        const data = await getOrCreateCart({
+          userId: user?.id,
+          sessionId: existingSession,
+        });
+
         if (user?.id) {
           if (existingSession) {
             cookies.remove("sessionId");
@@ -68,10 +78,16 @@ export default function Header() {
           }
         }
         dispatch(replaceCart(data.cartItems));
-      })
-      .catch(() => {
+      } catch (err) {
         return;
-      });
+      }
+    };
+
+    // Debounce the initial fetch
+    const timeoutId = setTimeout(fetchCart, 100);
+
+    // Cleanup
+    return () => clearTimeout(timeoutId);
   }, [user, dispatch]);
 
   useEffect(() => {
