@@ -6,7 +6,7 @@ import Link from "next/link";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { Session } from "next-auth";
 import logo from "@/public/logo.png";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { replaceAddress } from "@/components/address/addressSlice";
 
 export default function CheckoutHeader({ session }: { session: Session }) {

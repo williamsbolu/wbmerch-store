@@ -58,36 +58,25 @@ export default function Header() {
 
     const fetchCart = async () => {
       try {
-        // Add a small random delay to help prevent concurrent calls
-        await new Promise((resolve) =>
-          setTimeout(resolve, Math.random() * 200)
-        );
-
         const data = await getOrCreateCart({
           userId: user?.id,
           sessionId: existingSession,
         });
 
-        if (user?.id) {
-          if (existingSession) {
-            cookies.remove("sessionId");
-          }
-        } else {
-          if (!existingSession && data.sessionId) {
-            cookies.set("sessionId", data.sessionId!);
-          }
+        if (user?.id && existingSession) {
+          cookies.remove("sessionId");
         }
+
         dispatch(replaceCart(data.cartItems));
       } catch (err) {
         return;
       }
     };
 
-    // Debounce the initial fetch
-    const timeoutId = setTimeout(fetchCart, 100);
-
-    // Cleanup
-    return () => clearTimeout(timeoutId);
+    // only get the cart when there is an existing session or when the user is loggedIn
+    if (existingSession || user?.id) {
+      fetchCart();
+    }
   }, [user, dispatch]);
 
   useEffect(() => {

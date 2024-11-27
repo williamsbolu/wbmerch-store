@@ -31,6 +31,7 @@ import { Size } from "@prisma/client";
 import Modal from "@/components/ui/ModalContainer";
 import ConfirmDelete from "@/components/ui/ConfirmDelete";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export default function CartItem({
   productId,
@@ -41,6 +42,7 @@ export default function CartItem({
 }: cartItemObject) {
   const { currency, convertPrice } = useCurrency();
   const [isPending, startTransition] = useTransition();
+  const user = useCurrentUser();
   const dispatch = useDispatch();
 
   const getUnitQuantity = () => {
@@ -61,6 +63,12 @@ export default function CartItem({
   const deleteCart = () => {
     const sessionId = cookies.get("sessionId");
 
+    // Note: it also fights against cases where the user manually messes with the sessionId cookie
+    // so while there is no session cookie and d user is not logged in, we dont let d user interact with this function
+    if (!sessionId && !user?.id) {
+      return;
+    }
+
     startTransition(() => {
       deleteCartItem(sessionId, productId, size)
         .then(() => {
@@ -78,9 +86,15 @@ export default function CartItem({
 
     const sessionId = cookies.get("sessionId");
 
+    // Note: it also fights against cases where the user manually messes with the sessionId cookie
+    // so while there is no session cookie and d user is not logged in, we dont let d user interact with this function
+    if (!sessionId && !user?.id) {
+      return;
+    }
+
     startTransition(() => {
       deleteCartQuantity(sessionId, productId, size)
-        .then((data) => {
+        .then(() => {
           dispatch(
             removeItemQuantity({
               id: productId,
@@ -104,7 +118,7 @@ export default function CartItem({
 
     startTransition(() => {
       addOrUpdateCart({ sessionId, productId, quantity: 1, size })
-        .then(() => {
+        .then((data) => {
           dispatch(
             addItem({
               id: uuidv4(), // not useful here, only when creating
@@ -114,6 +128,10 @@ export default function CartItem({
               size,
             })
           );
+
+          if (!sessionId && !user?.id) {
+            cookies.set("sessionId", data.sessionId!);
+          }
 
           toast.success("Quantity modified");
         })

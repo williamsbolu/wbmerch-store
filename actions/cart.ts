@@ -217,7 +217,7 @@ export async function addOrUpdateCart({
   if (existingCart) {
     await db.cartItem.update({
       where: { id: existingCart.id },
-      data: { quantity: { increment: 1 } },
+      data: { quantity: { increment: quantity } },
     });
   } else {
     await db.cartItem.create({

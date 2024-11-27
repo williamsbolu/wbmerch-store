@@ -107,7 +107,7 @@ export default function ProductDetail({
             })
           );
 
-          // Note: this code is not important, it just for fighting against cases where the user manually messes with the sessionId cookie
+          // Note: it also fights against cases where the user manually messes with the sessionId cookie
           // if d user adds to cart when he is not loggedIn and there was no sessionId when the user added to cart, we set the new sessionId that was used on the server to create the cart
           if (!sessionId && !user?.id) {
             cookies.set("sessionId", data.sessionId!);
