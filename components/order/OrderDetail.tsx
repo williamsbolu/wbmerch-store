@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { GoArrowLeft } from "react-icons/go";
 import { TbTruckDelivery } from "react-icons/tb";
@@ -29,13 +28,6 @@ export default function OrderDetail({
   order: OrderDetailType;
 }) {
   const router = useRouter();
-
-  const statusColor = {
-    pending: "yellow",
-    confirmed: "sky",
-    delivered: "green",
-    cancelled: "red",
-  };
 
   const deliveryDate = addDays(new Date(createdAt), 3);
 

@@ -54,7 +54,7 @@ export default function ResetPasswordForm() {
       <div className="mx-auto grid gap-4 max-w-[400px]">
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-1">
-            <label htmlFor="" className=" text-sm tracking-wide">
+            <label htmlFor="" className="text-sm tracking-wide">
               Email
             </label>
             <input
@@ -63,7 +63,7 @@ export default function ResetPasswordForm() {
                 errors?.email?.message
                   ? "border-[#EF4444] focus:border-[#EF4444]"
                   : "border-primary/40 focus:border-primary"
-              } py-[10px] px-3 text-sm rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm`}
+              } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm md:text-sm`}
               {...register("email")}
               disabled={isPending}
               placeholder="Enter Email"

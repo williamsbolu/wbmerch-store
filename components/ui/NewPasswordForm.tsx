@@ -68,7 +68,7 @@ export default function NewPasswordForm() {
                 errors?.password?.message
                   ? "border-[#EF4444] focus:border-[#EF4444]"
                   : "border-primary/40 focus:border-primary"
-              } py-[10px] px-3 text-sm rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm`}
+              } py-[10px] px-3 text-base rounded-[4px] w-full focus:outline-none shadow-sm placeholder:text-sm md:text-sm`}
               {...register("password")}
               disabled={isPending}
               placeholder="Enter Password"

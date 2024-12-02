@@ -58,7 +58,7 @@ export default function OrderDetailItem({
       <div className="flex justify-between items-center">
         <div className="sm:space-y-[6px]">
           <OrderStatus type={statusColor[status] as StatusType}>
-            Delivered
+            {status}
           </OrderStatus>
           <p className="text-sm">
             On {format(new Date(statusTimeStamp[status]!), "dd-MM-yyyy")}
