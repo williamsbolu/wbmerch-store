@@ -24,6 +24,7 @@ export default async function RootLayout({
   const session = await auth();
 
   if (!session || session.user.role === "USER") {
+    // change this logic here to middleware or add directly to the pages
     notFound();
   }
 

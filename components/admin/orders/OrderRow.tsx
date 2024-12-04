@@ -64,10 +64,17 @@ export default function OrderRow({
   const confirmUserOrder = () => {
     startTransition(() => {
       confirmOrder(id, paymentMethod, referenceId)
-        .then(() => {
-          toast.success(`${orderId} confirmed successfully`, {
-            position: "top-center",
-          });
+        .then((data) => {
+          if (data.success) {
+            toast.success(data.success, {
+              position: "top-center",
+            });
+          }
+          if (data.error) {
+            toast.error(data.error, {
+              position: "top-center",
+            });
+          }
         })
         .catch((err) => {
           toast.error(`Failed to confirm order with id ${orderId}`, {
