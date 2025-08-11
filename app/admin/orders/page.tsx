@@ -1,4 +1,6 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
+import { auth } from "@/auth";
 import Loader from "@/components/admin/ui/Loader";
 import OrderTableOperations from "@/components/admin/orders/OrderTableOperations";
 import OrderTableBody from "@/components/admin/orders/OrderTableBody";
@@ -8,6 +10,12 @@ export default async function Page({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
+  const session = await auth();
+
+  if (!session || session.user.role === "USER") {
+    return notFound();
+  }
+
   const status = (searchParams?.status as string) || "all";
 
   const page = !searchParams?.page ? 1 : Number(searchParams.page);

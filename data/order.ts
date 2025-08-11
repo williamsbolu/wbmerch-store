@@ -245,3 +245,24 @@ export async function getOrdersByStatus({
     throw new Error("Failed to get orders");
   }
 }
+
+export async function getAllOrdersForDashboard() {
+  try {
+    const orders = await db.order.findMany({
+      select: {
+        status: true,
+        currency: true,
+        rateToUsd: true,
+        totalAmount: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return orders;
+  } catch (err) {
+    throw new Error("Failed to get all orders");
+  }
+}

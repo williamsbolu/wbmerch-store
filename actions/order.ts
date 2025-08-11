@@ -118,7 +118,7 @@ export async function verifyTransaction(
   transactionId: string
 ) {
   try {
-    const order = await db.order.findUnique({
+    const order = await db.order.findFirst({
       where: {
         referenceId: transactionRef,
       },
@@ -147,61 +147,6 @@ export async function verifyTransaction(
       Number(response.data.amount) === Number(order.totalAmount) &&
       response.data.currency === order.currency
     ) {
-      // Confirm the custormer's payment
-      const updatedOrder = await db.order.update({
-        where: {
-          referenceId: transactionRef,
-        },
-        data: {
-          isPaid: true,
-          transactionId: transactionId,
-        },
-        include: {
-          items: {
-            include: {
-              product: {
-                select: {
-                  id: true,
-                  sizes: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      // we loop through the products ordered to get the productId and quantity then use it to update that particular product document to reflect the sold and the total stock
-      await Promise.all(
-        updatedOrder.items.map(async (item) => {
-          try {
-            if (item.size && item.product.sizes) {
-              await db.products.update({
-                where: { id: item.productId },
-                data: {
-                  sizes: {
-                    ...item.product.sizes,
-                    [item.size]: item.product.sizes![item.size] - item.quantity,
-                  },
-                  sold: { increment: item.quantity },
-                  totalStock: { decrement: item.quantity },
-                },
-              });
-            } else {
-              await db.products.update({
-                where: { id: item.productId },
-                data: {
-                  stock: { decrement: item.quantity },
-                  sold: { increment: item.quantity },
-                  totalStock: { decrement: item.quantity },
-                },
-              });
-            }
-          } catch (error) {
-            console.error(`Error updating product ${item.productId}:`, error);
-          }
-        })
-      );
-
       return { success: "Your payment was successful" };
     } else {
       return { error: "Your payment was unsuccessful" };
@@ -296,7 +241,7 @@ export async function confirmOrder(
     data.isPaid = true;
   }
 
-  // Prevents confirming uppaid orders of customers that made use of the card payment method (referenceId would be available on card purchase)
+  // Prevents confirming unpaid orders of customers that made use of the card payment method (referenceId would be available on card purchase)
   if (paymentMethod === "card") {
     try {
       const response = await axios.get(
@@ -323,7 +268,56 @@ export async function confirmOrder(
       id,
     },
     data,
+    include: {
+      items: {
+        include: {
+          product: {
+            select: {
+              id: true,
+              sizes: true,
+            },
+          },
+        },
+      },
+    },
   });
+
+  // Only runs when the user pays with either pay_on_delivery or bank_transfer, we update the stock of the products ordered
+  if (
+    paymentMethod === "pay_on_delivery" ||
+    paymentMethod === "bank_transfer"
+  ) {
+    await Promise.all(
+      order.items.map(async (item) => {
+        try {
+          if (item.size && item.product.sizes) {
+            await db.products.update({
+              where: { id: item.productId },
+              data: {
+                sizes: {
+                  ...item.product.sizes,
+                  [item.size]: item.product.sizes![item.size] - item.quantity,
+                },
+                sold: { increment: item.quantity },
+                totalStock: { decrement: item.quantity },
+              },
+            });
+          } else {
+            await db.products.update({
+              where: { id: item.productId },
+              data: {
+                stock: { decrement: item.quantity },
+                sold: { increment: item.quantity },
+                totalStock: { decrement: item.quantity },
+              },
+            });
+          }
+        } catch (error) {
+          console.error(`Error updating product ${item.productId}:`, error);
+        }
+      })
+    );
+  }
 
   // TODO: Send confirmation email to the customer
 

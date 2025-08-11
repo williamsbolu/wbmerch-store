@@ -1,9 +1,17 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
+import { auth } from "@/auth";
 import CreateUsersForm from "@/components/admin/users/CreateUsersForm";
 import UserSkeletonLoader from "@/components/admin/users/UserSkeletonLoader";
 import UserTableContainer from "@/components/admin/users/UserTableContainer";
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth();
+
+  if (!session || session.user.role === "USER") {
+    return notFound();
+  }
+
   return (
     <>
       <div className="grid gap-6">

@@ -68,4 +68,6 @@ export const config = {
 };
 
 // the order of the if clauses implemented here matter in the middleware
-// return null: means allow this, dont do anything if this happens
+
+// note: return null would throw a typescript error so use only return it works the same
+// return: means allow this, dont do anything if this happens

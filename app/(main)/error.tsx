@@ -14,7 +14,7 @@ export default function Error({
       <h2 className="text-3xl font-normal text-center tracking-wider">
         Something went wrong!
       </h2>
-      <p className="text-base tracking-wide text-center">{error.message}</p>
+      {/* <p className="text-base tracking-wide text-center">{error.message}</p> */}
       <Button
         type="button"
         variation="primary"

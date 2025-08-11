@@ -24,7 +24,7 @@ export default {
           const { email, password } = validatedFields.data;
 
           const user = await getUserByEmail(email);
-          // user.password camparison means if the user loggedIn using a third party providers
+          // user.password camparison means if the user logged In using a third party providers
           if (!user || !user.password) return null;
 
           // if the password matches
