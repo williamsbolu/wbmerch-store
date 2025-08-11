@@ -1,5 +1,9 @@
 import Stats from "@/components/admin/dashboard/Stats";
-import { getOrderWithinDays, getTodaysOrder } from "@/data/order";
+import {
+  getOrderWithinDays,
+  getTodaysOrder,
+  getAllOrdersForDashboard,
+} from "@/data/order";
 import { getAllUsersCount } from "@/data/user";
 import SalesChart from "@/components/admin/dashboard/SalesChart";
 import CurrencyChart from "@/components/admin/dashboard/CurrencyChart";
@@ -8,10 +12,10 @@ import TodayActivity from "@/components/admin/dashboard/TodayActivity";
 export default async function DashboardLayout({
   numDays,
 }: {
-  numDays: number;
+  numDays: number | undefined;
 }) {
   const [orders, userCount, todaysOrder] = await Promise.all([
-    getOrderWithinDays(numDays),
+    numDays ? getOrderWithinDays(numDays) : getAllOrdersForDashboard(),
     getAllUsersCount(),
     getTodaysOrder(),
   ]);
@@ -21,7 +25,7 @@ export default async function DashboardLayout({
       <Stats orders={orders} userCount={userCount} />
       <TodayActivity orders={todaysOrder} />
       <CurrencyChart orders={orders} />
-      <SalesChart orders={orders} numDays={numDays} />
+      <SalesChart orders={orders} numDays={numDays || 0} />
     </div>
   );
 }

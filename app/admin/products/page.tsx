@@ -1,14 +1,22 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
+import { auth } from "@/auth";
 import AddProducts from "@/components/admin/products/AddProducts";
 import ProductTableBody from "@/components/admin/products/ProductTableBody";
 import ProductTableOperations from "@/components/admin/products/ProductTableOperations";
 import Loader from "@/components/admin/ui/Loader";
 
-export default function Page({
+export default async function Page({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
+  const session = await auth();
+
+  if (!session || session.user.role === "USER") {
+    return notFound();
+  }
+
   const status = (searchParams?.status as string) || undefined;
 
   const page = !searchParams?.page ? 1 : Number(searchParams.page);

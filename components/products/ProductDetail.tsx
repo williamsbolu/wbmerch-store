@@ -37,6 +37,7 @@ export default function ProductDetail({
   const user = useCurrentUser();
   const [selectedSize, setSelectedSize] = useState<string>("s");
   const [quantity, setQuantity] = useState<number>(1);
+  const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const [isPendingWishlist, startWishlistTransition] = useTransition();
   const [isCheckingOut, setIsCheckingOut] = useState<boolean>(false);
@@ -48,18 +49,18 @@ export default function ProductDetail({
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // TODO:(3) implement code to caculate if a product is out of stock for both stock by "sizes" object and "stock"
+  // ? code to caculate if a product is out of stock for both stock by "sizes" object and "stock"
   const totalQuantity = sizes
     ? Object.values(sizes).reduce((acc, val) => acc + val, 0)
     : stock;
 
   const addToCartHandler = (type: "cart" | "checkout") => {
-    // TODO (1): get the total "product quantity" and then add it to the local cart, can either be from the stock or price
+    //  get the total "product quantity" and then add it to the local cart, can either be from the stock or price
     const productQuantityInStock = sizes
       ? sizes[selectedSize as keyof typeof sizes]
       : stock;
 
-    // TODO:(2) if the items exist and the quantity the user is adding for a particular size is larger than the units available for that size
+    // if the items exist and the quantity the user is adding for a particular size is larger than the units available for that size
     if (existingItem) {
       const totalNewCartQuantiity = existingItem.quantity + quantity;
 
@@ -69,7 +70,7 @@ export default function ProductDetail({
       }
     }
 
-    // TODO: check if the product quantity of that product is available before adding to the cart
+    //  check if the product quantity of that product is available before adding to the cart
     if (quantity > productQuantityInStock!) {
       toast.error("Not enough stock!");
       return;
@@ -225,10 +226,14 @@ export default function ProductDetail({
             className="bg-white text-[#121212BF] border w-[248PX] border-primary rounded-[5px] text-[13px] px-4 h-11 focus:outline-none"
             defaultValue={selectedSize}
             onChange={(e) => setSelectedSize(e.target.value)}
+            onFocus={() => setIsSelectOpen(true)}
+            onBlur={() => setIsSelectOpen(false)}
           >
             {Object.entries(sizes!).map(([size, quantity]) => (
               <option key={size} value={size} disabled={quantity === 0}>
-                {formatSizeText(size)}
+                {isSelectOpen && quantity === 0
+                  ? `${formatSizeText(size)} - out of stock`
+                  : formatSizeText(size)}
               </option>
             ))}
           </select>

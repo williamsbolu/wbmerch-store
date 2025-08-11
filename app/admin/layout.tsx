@@ -9,24 +9,18 @@ const poppins = Poppins({
 import { auth } from "@/auth";
 import Layout from "@/components/admin/ui/Layout";
 import { SessionProvider } from "next-auth/react";
-import { notFound } from "next/navigation";
 
 export const metadata = {
   title: "Dashboard / WB Merch",
   description: "Admin Dashboard for WB Merch",
 };
 
-export default async function RootLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const session = await auth();
-
-  if (!session || session.user.role === "USER") {
-    // change this logic here to middleware or add directly to the pages
-    notFound();
-  }
 
   return (
     <SessionProvider session={session}>
@@ -38,3 +32,5 @@ export default async function RootLayout({
     </SessionProvider>
   );
 }
+
+// you can implement middleware authorization to the admin pages for extra security (not important) and add authorization on server actions before running the actions (very important)

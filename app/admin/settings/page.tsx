@@ -1,8 +1,16 @@
+import { notFound } from "next/navigation";
+import { auth } from "@/auth";
 import CurrencySettingsForm from "@/components/admin/settings/CurrencySettingsForm";
 import UserSettingsForm from "@/components/admin/settings/UserSettingsForm";
 import { getSettings } from "@/data/settings";
 
 export default async function Page() {
+  const session = await auth();
+
+  if (!session || session.user.role === "USER") {
+    return notFound();
+  }
+
   const settings = await getSettings();
 
   return (

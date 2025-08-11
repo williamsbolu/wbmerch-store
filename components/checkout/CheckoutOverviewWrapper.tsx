@@ -134,7 +134,7 @@ export default function CheckoutOverviewWrapper({
       currency === "NGN" ? 0 : 2
     );
 
-    console.log({ shippingFee, total: caculateTotal() });
+    // console.log({ shippingFee, total: caculateTotal() });
 
     // return;
 
@@ -155,6 +155,7 @@ export default function CheckoutOverviewWrapper({
 
     if (paymentMethod === "pay_on_delivery") {
       const sessionId = cookies.get("sessionId");
+      console.log(sessionId);
 
       startTransition(() => {
         createOrder(data, sessionId)

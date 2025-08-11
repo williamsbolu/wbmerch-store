@@ -34,8 +34,11 @@ export default function SalesChart({
   orders: OrderProp[];
   numDays: number;
 }) {
+  // For "all time" case, use last 365 days as a reasonable default for chart display
+  const effectiveDays = numDays === 0 ? 365 : numDays;
+
   const allDates = eachDayOfInterval({
-    start: subDays(new Date(), numDays - 1),
+    start: subDays(new Date(), effectiveDays - 1),
     end: new Date(),
   });
 
@@ -63,12 +66,17 @@ export default function SalesChart({
     background: "#fff",
   };
 
+  const title =
+    numDays === 0
+      ? "Sales in USD (All Time - Last 365 Days Displayed)"
+      : `Sales in USD from ${format(allDates.at(0)!, "MMM dd yyyy")} — ${format(
+          allDates.at(-1)!,
+          "MMM dd yyyy"
+        )}`;
+
   return (
     <div className="col-span-full bg-white border border-solid border-gray-200 rounded-lg p-8 flex flex-col gap-6">
-      <h2 className="text-xl font-semibold leading-snug">
-        Sales in USD from {format(allDates.at(0)!, "MMM dd yyyy")} &mdash;{" "}
-        {format(allDates.at(-1)!, "MMM dd yyyy")}{" "}
-      </h2>
+      <h2 className="text-xl font-semibold leading-snug">{title}</h2>
 
       <ResponsiveContainer height={300} width="100%">
         <AreaChart data={data} height={300} width={700}>
