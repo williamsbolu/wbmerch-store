@@ -241,7 +241,7 @@ type OrderAddress {
 
 model Order {
   id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  referenceId     String?
+  referenceId     String? // next time i want to add a unique reference id for each order
   transactionId   String?
   orderId         String         @unique
   contactEmail    String?
