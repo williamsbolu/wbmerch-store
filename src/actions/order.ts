@@ -1,8 +1,11 @@
 "use server";
 
-import axios from "axios";
 import uniqid from "uniqid";
-import flutterwave from "flutterwave-node-v3";
+import {
+  initiatePayment as createFlutterwavePayment,
+  verifyTransactionById,
+  verifyByReference,
+} from "@/lib/flutterwave";
 import { db } from "@/lib/db";
 import { generateOrderId } from "@/utils/helpers";
 import { OrderData } from "@/utils/types";
@@ -11,11 +14,6 @@ import { revalidatePath } from "next/cache";
 import { PaymentMethod, Status } from "@prisma/client";
 import { clearUsersCart } from "@/data/cart";
 import { redirect } from "next/navigation";
-
-const flw = new flutterwave(
-  process.env.FLW_PUBLIC_KEY!,
-  process.env.FLW_SECRET_KEY!
-);
 
 export async function initiatePayment(
   data: OrderData,
@@ -83,34 +81,25 @@ export async function initiatePayment(
     : `${data.shippingAddress.firstName} ${data.shippingAddress.lastName}`;
   const domain = process.env.Next_PUBLIC_APP_URL;
 
-  const response = await axios.post(
-    "https://api.flutterwave.com/v3/payments",
-    {
-      tx_ref: transactionRef,
-      amount: data.totalAmount,
-      currency: data.currency,
-      redirect_url: `${domain}/payment-confirmation`,
-      customer: {
-        email: customerEmail,
-        name: customerName,
-      },
-      customizations: {
-        title: "Wb merch",
-        logo: "https://dwirvaqvo77ym.cloudfront.net/logo.jpg",
-      },
+  const flwResponse = await createFlutterwavePayment({
+    tx_ref: transactionRef,
+    amount: data.totalAmount,
+    currency: data.currency,
+    redirect_url: `${domain}/payment-confirmation`,
+    customer: {
+      email: customerEmail,
+      name: customerName,
     },
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+    customizations: {
+      title: "Wb merch",
+      logo: "https://dwirvaqvo77ym.cloudfront.net/logo.jpg",
+    },
+  });
 
   // Delete the users cart based on the sessionId or the userId
   await clearUsersCart(user!, sessionId);
 
-  return response.data;
+  return flwResponse;
 }
 
 export async function verifyTransaction(
@@ -136,16 +125,12 @@ export async function verifyTransaction(
       return { success: "Your payment was successful" };
     }
 
-    const response = await flw.Transaction.verify({
-      id: transactionId,
-    });
-
-    // console.log({ verifyResponse: response });
+    const transaction = await verifyTransactionById(transactionId);
 
     if (
-      response.data.status === "successful" &&
-      Number(response.data.amount) === Number(order.totalAmount) &&
-      response.data.currency === order.currency
+      transaction.status === "successful" &&
+      Number(transaction.amount) === Number(order.totalAmount) &&
+      transaction.currency === order.currency
     ) {
       return { success: "Your payment was successful" };
     } else {
@@ -244,16 +229,9 @@ export async function confirmOrder(
   // Prevents confirming unpaid orders of customers that made use of the card payment method (referenceId would be available on card purchase)
   if (paymentMethod === "card") {
     try {
-      const response = await axios.get(
-        `https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=${referenceId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
-          },
-        }
-      );
+      const transaction = await verifyByReference(referenceId!);
 
-      if (response.data.data.status === "successful") {
+      if (transaction.status === "successful") {
         data.isPaid = true;
       }
     } catch (err) {

@@ -6,11 +6,12 @@ export const metadata = {
   title: "All Collections",
 };
 
-export default function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function Page(
+  props: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const page = !searchParams?.page ? 1 : Number(searchParams.page);
 
   // const query = { page, limit: 16 }; // no need for limit, a default of 16 is set in the query data

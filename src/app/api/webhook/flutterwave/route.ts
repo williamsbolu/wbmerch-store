@@ -1,17 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import flutterwave from "flutterwave-node-v3";
-
-const flw = new flutterwave(
-  process.env.FLW_PUBLIC_KEY!,
-  process.env.FLW_SECRET_KEY!
-);
+import { verifyTransactionById } from "@/lib/flutterwave";
 
 export async function POST(request: NextRequest) {
   try {
-    // Get client IP for logging purposes
+    // Get client IP for logging purposes (NextRequest.ip was removed in Next.js 15;
+    // the IP is now provided by the hosting platform via forwarded headers)
     const clientIP =
-      request.ip || request.headers.get("x-forwarded-for") || "unknown";
+      request.headers.get("x-forwarded-for") ||
+      request.headers.get("x-real-ip") ||
+      "unknown";
 
     // Get the webhook payload
     const payload = await request.json();
@@ -89,13 +87,12 @@ async function handleChargeCompleted(data: any, clientIP: string) {
 
     // Verify the transaction with Flutterwave API for additional security
     try {
-      const verificationResponse = await flw.Transaction.verify({ id });
+      const transaction = await verifyTransactionById(id);
 
       if (
-        verificationResponse.data.status === "successful" &&
-        Number(verificationResponse.data.amount) ===
-          Number(order.totalAmount) &&
-        verificationResponse.data.currency === order.currency
+        transaction.status === "successful" &&
+        Number(transaction.amount) === Number(order.totalAmount) &&
+        transaction.currency === order.currency
       ) {
         // Update order with payment confirmation
         const updatedOrder = await db.order.update({

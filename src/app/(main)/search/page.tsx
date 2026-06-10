@@ -4,11 +4,12 @@ import SearchedProductList from "../../../components/products/SearchedProductLis
 import { getSearchedProducts } from "../../../lib/data-service";
 
 type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export async function generateMetadata({ params, searchParams }: Props) {
+export async function generateMetadata(props: Props) {
+  const searchParams = await props.searchParams;
   const searchKey = (searchParams.q as string) || "";
 
   // Not really needed here, but just kept it
@@ -24,11 +25,12 @@ export async function generateMetadata({ params, searchParams }: Props) {
   };
 }
 
-export default function page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function page(
+  props: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const searchKey = (searchParams.q as string) || "";
 
   // sort

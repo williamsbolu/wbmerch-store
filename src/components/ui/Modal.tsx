@@ -7,8 +7,21 @@ import {
   useContext,
   useEffect,
   useState,
+  useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
+
+// Hydration-safe "are we on the client?" check. Returns false during SSR and the
+// first client render, then true — used to defer `createPortal` (which needs
+// `document`) until after mount, without a setState-in-effect.
+const emptySubscribe = () => () => {};
+function useIsClient() {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+}
 
 type ModalContextValues = {
   openName: string | null;
@@ -44,7 +57,7 @@ function Open({
   children,
   opens: opensWindowName,
 }: {
-  children: React.ReactElement;
+  children: React.ReactElement<any>;
   opens: string;
 }) {
   const { open } = useContext(ModalContext);
@@ -58,16 +71,12 @@ function Window({
   type,
   name,
 }: {
-  children: React.ReactElement;
+  children: React.ReactElement<any>;
   type: "menu" | "search-bar";
   name: "menu" | "search-bar";
 }) {
   const { openName, close } = useContext(ModalContext);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const isClient = useIsClient();
 
   useEffect(() => {
     if (name === openName) {

@@ -6,11 +6,12 @@ import ProductTableBody from "@/components/admin/products/ProductTableBody";
 import ProductTableOperations from "@/components/admin/products/ProductTableOperations";
 import Loader from "@/components/admin/ui/Loader";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function Page(
+  props: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const session = await auth();
 
   if (!session || session.user.role === "USER") {

@@ -7,10 +7,8 @@ import { db } from "@/lib/db";
 import s3 from "@/lib/s3";
 import cloudFront from "@/lib/cloudFront";
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: { productId: string } }
-) {
+export async function PATCH(request: Request, props: { params: Promise<{ productId: string }> }) {
+  const params = await props.params;
   const productId = params.productId;
 
   const formData = await request.formData();
@@ -149,10 +147,8 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { productId: string } }
-) {
+export async function DELETE(request: Request, props: { params: Promise<{ productId: string }> }) {
+  const params = await props.params;
   const productId = params.productId;
 
   try {

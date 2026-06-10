@@ -8,8 +8,13 @@ import {
   publicRoutes,
 } from "@/routes";
 
+// Next.js 16 renamed `middleware` -> `proxy`, which runs on the Node.js runtime.
+// We instantiate a lightweight Auth.js client from `auth.config` (providers only,
+// NO Prisma adapter and NO DB-hitting callbacks). The session strategy is JWT, so the
+// proxy only needs to verify the token — this keeps it free of per-request DB queries.
 const { auth } = NextAuth(authConfig);
 
+// Next.js accepts a default export (or a named `proxy` export) as the proxy handler.
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
@@ -59,7 +64,7 @@ export default auth((req) => {
   return;
 });
 
-// Optionally, don't invoke Middleware on some paths
+// Optionally, don't invoke the Proxy on some paths
 export const config = {
   matcher: [
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
@@ -67,7 +72,7 @@ export const config = {
   ],
 };
 
-// the order of the if clauses implemented here matter in the middleware
+// the order of the if clauses implemented here matter in the proxy
 
 // note: return null would throw a typescript error so use only return it works the same
 // return: means allow this, dont do anything if this happens

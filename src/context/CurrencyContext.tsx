@@ -42,6 +42,7 @@ export const CurrencyProvider = ({
     if (typeof window !== "undefined") {
       const storedCurrency = localStorage.getItem("currency") as Currency;
       if (storedCurrency) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrency(storedCurrency);
       } else {
         localStorage.setItem("currency", "USD");

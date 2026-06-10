@@ -3,11 +3,12 @@ import OrderFilter from "@/components/order/OrderFilter";
 import Spinner from "@/components/ui/AccountPageSpinner";
 import OrderList from "@/components/order/OrderList";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function Page(
+  props: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const status = (searchParams?.status as string) || "ongoing-delivered";
   const page = !searchParams?.page ? 1 : Number(searchParams.page);
 

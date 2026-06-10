@@ -12,7 +12,6 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 type SearchedItems = {
-  _id: string;
   name: string;
   coverImage: string;
   price: number;
@@ -53,13 +52,12 @@ export default function SearchBar({
 
   useEffect(() => {
     if (searchTerm.length <= 2) return;
-    // initial search
-    if (searchTerm.length === 3) {
-      getSearchItemsHandler();
-      return;
-    }
 
-    const debounce = setTimeout(() => getSearchItemsHandler(), 700);
+    // Search immediately on the 3rd character, debounce (700ms) for the rest.
+    // Running through setTimeout keeps the state updates out of the synchronous
+    // effect body and makes the immediate search cancelable too.
+    const delay = searchTerm.length === 3 ? 0 : 700;
+    const debounce = setTimeout(() => getSearchItemsHandler(), delay);
 
     return () => clearTimeout(debounce);
   }, [searchTerm, getSearchItemsHandler]);
@@ -100,7 +98,7 @@ export default function SearchBar({
               {!isLoading && products?.length! > 0 && (
                 <ul className="grid sm:grid-cols-2">
                   {products?.map((product) => (
-                    <SearchBarResultsItem key={product._id} item={product} />
+                    <SearchBarResultsItem key={product.slug} item={product} />
                   ))}
 
                   <button

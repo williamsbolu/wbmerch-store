@@ -39,7 +39,7 @@ function Open({
   children,
   opens: opensWindowName,
 }: {
-  children: React.ReactElement;
+  children: React.ReactElement<any>;
   opens: string;
 }) {
   const { open } = useContext(ModalContext);
@@ -52,7 +52,7 @@ function Window({
   children,
   name,
 }: {
-  children: React.ReactElement;
+  children: React.ReactElement<any>;
   name: string;
 }) {
   const { openName, close } = useContext(ModalContext);

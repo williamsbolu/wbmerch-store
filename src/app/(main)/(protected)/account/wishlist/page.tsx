@@ -2,11 +2,12 @@ import { Suspense } from "react";
 import UsersWishlist from "@/components/wishlist/UsersWishlist";
 import WishlistSpinner from "@/components/ui/AccountPageSpinner";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function Page(
+  props: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const page = !searchParams?.page ? 1 : Number(searchParams.page);
 
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DotLoader from "./DotLoader";
 import { newVerification } from "@/actions/auth";
 import { useSearchParams } from "next/navigation";
@@ -9,32 +9,27 @@ import { FormError } from "@/components/ui/FormError";
 import { FormSuccess } from "@/components/ui/FormSuccess";
 
 export default function NewVerificationForm() {
-  const [error, setError] = useState<string | undefined>();
-  const [success, setSuccess] = useState<string | undefined>();
-
   const searchParams = useSearchParams();
-
   const token = searchParams.get("token");
 
-  const onSubmit = useCallback(() => {
-    if (!token) {
-      setError("Missing token!");
-      return;
-    }
-
-    newVerification(token)
-      .then((data) => {
-        setSuccess(data.success);
-        setError(data.error);
-      })
-      .catch(() => {
-        setError("Something went wrong!");
-      });
-  }, [token]);
+  const [result, setResult] = useState<{
+    success?: string;
+    error?: string;
+  }>({});
 
   useEffect(() => {
-    onSubmit();
-  });
+    // Only the async verification call lives in the effect — its setState runs
+    // after the await, so it isn't a synchronous setState-in-effect. The
+    // "missing token" case is derived during render below (no effect needed).
+    if (!token) return;
+
+    newVerification(token)
+      .then((data) => setResult({ success: data.success, error: data.error }))
+      .catch(() => setResult({ error: "Something went wrong!" }));
+  }, [token]);
+
+  const error = token ? result.error : "Missing token!";
+  const success = result.success;
 
   return (
     <section className="pt-20 pb-16 px-4">

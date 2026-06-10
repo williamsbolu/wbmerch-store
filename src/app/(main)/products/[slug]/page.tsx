@@ -4,11 +4,12 @@ import { getProduct } from "@/lib/data-service";
 import ProductDetail from "@/components/products/ProductDetail";
 import { ProductDetailtypes } from "@/utils/types";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ slug: string }>;
+  }
+) {
+  const params = await props.params;
   const { name } = (await getProduct(params.slug)) as ProductDetailtypes;
 
   return {
@@ -16,7 +17,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function page({ params }: { params: { slug: string } }) {
+export default async function page(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const product = (await getProduct(params.slug)) as products;
 
   return (
